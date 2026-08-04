@@ -154,12 +154,12 @@
         </nav>
     </header>
 
-    <section class="hero">
-        <span class="mask-container"><h5 class="mask-text">to be update</h5></span>
-        <span class="mask-container delay-1"><h1 class="mask-text">to be update</h1></span> 
-        <br>
-        <a href="#portfolio" class="btn slide-up delay-2">View Our Work</a> 
-    </section>
+<section class="hero">
+    <span class="mask-container"><h5 class="mask-text" id="hero-subtitle">Loading...</h5></span>
+    <span class="mask-container delay-1"><h1 class="mask-text" id="hero-title">Loading...</h1></span> 
+    <br>
+    <a href="#portfolio" class="btn slide-up delay-2">View Our Work</a> 
+</section>
 
     <section class="about-section" id="about">
         <div class="about-grid">
@@ -291,28 +291,72 @@
         <p>&copy; 2026 Company Name. All rights reserved.</p>
     </footer>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const observerOptions = {
-                root: null,
-                rootMargin: '0px',
-                threshold: 0.15 
-            };
+   <!-- FIREBASE & SCROLL ANIMATION SCRIPT -->
+<script type="module">
+    // 1. Import Firebase Modules
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('active');
-                    } else {
-                        entry.target.classList.remove('active');
-                    }
-                });
-            }, observerOptions);
+    // 2. Your Firebase Configuration (Replace with your actual keys)
+    const firebaseConfig = {
+        apiKey: "YOUR_API_KEY",
+        authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+        projectId: "YOUR_PROJECT_ID",
+        storageBucket: "YOUR_PROJECT_ID.appspot.com",
+        messagingSenderId: "YOUR_SENDER_ID",
+        appId: "YOUR_APP_ID"
+    };
 
-            const revealElements = document.querySelectorAll('.slide-up, .slide-down, .slide-left, .slide-right, .mask-container');
-            revealElements.forEach(el => observer.observe(el));
-        });
-    </script>
+    // 3. Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
+    // 4. Fetch Data Function
+    async function loadSiteContent() {
+        try {
+            // Reference the specific document we created in the Admin panel
+            const heroRef = doc(db, "portfolio", "hero_section");
+            const heroSnap = await getDoc(heroRef);
+
+            if (heroSnap.exists()) {
+                const data = heroSnap.data();
+                
+                // Inject the data into the HTML elements
+                if (data.subtitle) document.getElementById('hero-subtitle').innerText = data.subtitle;
+                if (data.title) document.getElementById('hero-title').innerText = data.title;
+            } else {
+                console.log("No content found in database.");
+            }
+        } catch (error) {
+            console.error("Error fetching database content:", error);
+        }
+    }
+
+    // 5. Run everything when the page loads
+    document.addEventListener("DOMContentLoaded", () => {
+        // Load the Firebase content
+        loadSiteContent();
+
+        // Keep the original scroll animations active
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.15 
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                } else {
+                    entry.target.classList.remove('active');
+                }
+            });
+        }, observerOptions);
+
+        const revealElements = document.querySelectorAll('.slide-up, .slide-down, .slide-left, .slide-right, .mask-container');
+        revealElements.forEach(el => observer.observe(el));
+    });
+</script>
 </body>
 </html>
