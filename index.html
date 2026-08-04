@@ -293,57 +293,49 @@
 
    <!-- FIREBASE & SCROLL ANIMATION SCRIPT -->
 <script type="module">
-    // 1. Import Firebase Modules
+    // Import Firebase Modules via CDN
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
 
-    // 2. Your Firebase Configuration (Replace with your actual keys)
+    // Your actual Firebase Configuration
     const firebaseConfig = {
-        apiKey: "YOUR_API_KEY",
-        authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-        projectId: "YOUR_PROJECT_ID",
-        storageBucket: "YOUR_PROJECT_ID.appspot.com",
-        messagingSenderId: "YOUR_SENDER_ID",
-        appId: "YOUR_APP_ID"
+        apiKey: "AIzaSyCqhh4-Z7KsMP1bnnmsTDt5YXlSA28a0H0",
+        authDomain: "algoria-33961.firebaseapp.com",
+        projectId: "algoria-33961",
+        storageBucket: "algoria-33961.firebasestorage.app",
+        messagingSenderId: "30543782632",
+        appId: "1:30543782632:web:d387115e183a15fe2b5f5d",
+        measurementId: "G-FHHZ358DGR"
     };
 
-    // 3. Initialize Firebase
+    // Initialize Firebase
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+    const analytics = getAnalytics(app); // Google Analytics is now active!
 
-    // 4. Fetch Data Function
+    // Fetch Data Function
     async function loadSiteContent() {
         try {
-            // Reference the specific document we created in the Admin panel
             const heroRef = doc(db, "portfolio", "hero_section");
             const heroSnap = await getDoc(heroRef);
 
             if (heroSnap.exists()) {
                 const data = heroSnap.data();
-                
-                // Inject the data into the HTML elements
                 if (data.subtitle) document.getElementById('hero-subtitle').innerText = data.subtitle;
                 if (data.title) document.getElementById('hero-title').innerText = data.title;
-            } else {
-                console.log("No content found in database.");
             }
         } catch (error) {
             console.error("Error fetching database content:", error);
         }
     }
 
-    // 5. Run everything when the page loads
+    // Run when the page loads
     document.addEventListener("DOMContentLoaded", () => {
-        // Load the Firebase content
         loadSiteContent();
 
-        // Keep the original scroll animations active
-        const observerOptions = {
-            root: null,
-            rootMargin: '0px',
-            threshold: 0.15 
-        };
-
+        // Scroll Animations
+        const observerOptions = { root: null, rootMargin: '0px', threshold: 0.15 };
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
