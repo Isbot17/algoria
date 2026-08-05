@@ -217,15 +217,23 @@
     }
 
     // Save Functions exposed globally for the onclick events
-    window.saveHero = async () => {
-        const content = {
-            subtitle: document.getElementById('hero-subtitle-input').value,
-            title: document.getElementById('hero-title-input').value,
-            btnText: document.getElementById('hero-btn-input').value
-        };
-        await supabase.from('portfolio_content').upsert({ section_name: 'hero_section', data: content });
-        showMsg('hero-msg');
+window.saveHero = async () => {
+    const content = {
+        subtitle: document.getElementById('hero-subtitle-input').value,
+        title: document.getElementById('hero-title-input').value,
+        btnText: document.getElementById('hero-btn-input').value
     };
+    
+    // Catch any errors that happen during the upsert
+    const { error } = await supabase.from('portfolio_content').upsert({ section_name: 'hero_section', data: content });
+    
+    if (error) {
+        console.error("Supabase Error:", error);
+        alert("Failed to save! Check the console.");
+    } else {
+        showMsg('hero-msg'); // Only show success if there was no error
+    }
+};
 
     window.saveAbout = async () => {
         const content = {
