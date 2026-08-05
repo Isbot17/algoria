@@ -30,6 +30,31 @@
 
         section { padding: 5rem 5%; }
 
+        /* --- 3D FLIP LOADER --- */
+        .flip-loader {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            background-color: var(--accent);
+            animation: flipLoader 1.2s infinite ease-in-out;
+            vertical-align: middle;
+            margin: 0 5px;
+        }
+
+        @keyframes flipLoader {
+            0% { 
+                transform: perspective(120px) rotateX(0deg) rotateY(0deg); 
+            }
+            50% { 
+                transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg); 
+                background-color: var(--accent-dark); 
+            }
+            100% { 
+                transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg); 
+                background-color: var(--accent); 
+            }
+        }
+
         /* --- ADVANCED SCROLL ANIMATIONS --- */
         .slide-up, .slide-down, .slide-left, .slide-right {
             opacity: 0;
@@ -156,8 +181,8 @@
 
 <!-- HERO SECTION -->
 <section class="hero">
-    <span class="mask-container"><h5 class="mask-text" id="hero-subtitle">Loading...</h5></span>
-    <span class="mask-container delay-1"><h1 class="mask-text" id="hero-title">Loading...</h1></span> 
+    <span class="mask-container"><h5 class="mask-text" id="hero-subtitle"><span class="flip-loader"></span></h5></span>
+    <span class="mask-container delay-1"><h1 class="mask-text" id="hero-title"><span class="flip-loader"></span></h1></span> 
     <br>
     <a href="#portfolio" class="btn slide-up delay-2" id="hero-btn">View Our Work</a> 
 </section>
@@ -166,9 +191,9 @@
 <section class="about-section" id="about">
     <div class="about-grid">
         <div class="about-text slide-left">
-            <h5 id="about-label">Loading...</h5>
-            <h3 id="about-heading">Loading...</h3>
-            <p id="about-desc">Loading...</p>
+            <h5 id="about-label"><span class="flip-loader"></span></h5>
+            <h3 id="about-heading"><span class="flip-loader"></span></h3>
+            <p id="about-desc"><span class="flip-loader"></span></p>
             
             <div class="skills-container" id="skills-container">
                 <!-- Skills populated dynamically -->
@@ -185,8 +210,8 @@
 <!-- SERVICES SECTION -->
 <section class="services-section" id="services">
     <div class="section-header slide-down">
-        <h5 id="services-label">Loading...</h5>
-        <h2 id="services-heading">Loading...</h2>
+        <h5 id="services-label"><span class="flip-loader"></span></h5>
+        <h2 id="services-heading"><span class="flip-loader"></span></h2>
     </div>
     <div class="services-grid" id="services-grid">
         <!-- Services dynamically loaded -->
@@ -196,14 +221,14 @@
 <!-- VIDEO SECTION -->
 <section class="video-section slide-up">
     <a href="#" id="video-link" class="play-btn" target="_blank">▶</a>
-    <span class="mask-container"><h3 class="mask-text" id="video-title">Loading...</h3></span>
+    <span class="mask-container"><h3 class="mask-text" id="video-title"><span class="flip-loader"></span></h3></span>
 </section>
 
 <!-- PORTFOLIO SECTION -->
 <section class="portfolio-section" id="portfolio">
     <div class="section-header slide-down">
-        <h5 id="portfolio-label">Loading...</h5>
-        <h2 id="portfolio-heading">Loading...</h2>
+        <h5 id="portfolio-label"><span class="flip-loader"></span></h5>
+        <h2 id="portfolio-heading"><span class="flip-loader"></span></h2>
     </div>
     <div class="portfolio-grid" id="portfolio-grid">
         <!-- Portfolio dynamically loaded -->
@@ -213,9 +238,9 @@
 <!-- TEAM SECTION -->
 <section class="team-section" id="team">
     <div class="section-header mask-container">
-        <h5 class="mask-text" id="team-label" style="color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.5rem; font-size: 0.85rem;">Loading...</h5>
+        <h5 class="mask-text" id="team-label" style="color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.5rem; font-size: 0.85rem;"><span class="flip-loader"></span></h5>
         <br>
-        <h2 class="mask-text" id="team-heading">Loading...</h2>
+        <h2 class="mask-text" id="team-heading"><span class="flip-loader"></span></h2>
     </div>
     <div class="team-grid" id="team-grid">
         <!-- Team members dynamically loaded -->
@@ -225,8 +250,8 @@
 <!-- CONTACT SECTION -->
 <section class="contact-section slide-up" id="contact">
     <div class="section-header">
-        <h5 id="contact-label">Loading...</h5>
-        <h2 id="contact-heading">Loading...</h2>
+        <h5 id="contact-label"><span class="flip-loader"></span></h5>
+        <h2 id="contact-heading"><span class="flip-loader"></span></h2>
     </div>
     <div class="contact-container slide-down">
         <form class="contact-form">
@@ -243,138 +268,110 @@
     <p id="footer-text">&copy; 2026 Company Name. All rights reserved.</p>
 </footer>
 
-   <!-- FIREBASE & SCROLL ANIMATION SCRIPT -->
+<!-- SUPABASE & SCROLL ANIMATION SCRIPT -->
 <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 
-    const firebaseConfig = {
-        apiKey: "AIzaSyCqhh4-Z7KsMP1bnnmsTDt5YXlSA28a0H0",
-        authDomain: "algoria-33961.firebaseapp.com",
-        projectId: "algoria-33961",
-        storageBucket: "algoria-33961.firebasestorage.app",
-        messagingSenderId: "30543782632",
-        appId: "1:30543782632:web:d387115e183a15fe2b5f5d",
-        measurementId: "G-FHHZ358DGR"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+    const supabaseUrl = 'https://ohrumepiwvmytpwigddx.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9ocnVtZXBpd3ZteXRwd2lnZGR4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU5MTUyMDQsImV4cCI6MjEwMTQ5MTIwNH0.Fy1_dElDAIFDQht7Y--Nt7232qDKeHGjLNdZWc67pVE';
+    
+    const supabase = createClient(supabaseUrl, supabaseKey);
 
     async function loadAllContent() {
         try {
-            // 1. Hero Section
-            const heroSnap = await getDoc(doc(db, "portfolio", "hero_section"));
-            if (heroSnap.exists()) {
-                const data = heroSnap.data();
-                if (data.subtitle) document.getElementById('hero-subtitle').innerText = data.subtitle;
-                if (data.title) document.getElementById('hero-title').innerText = data.title;
-                if (data.btnText) document.getElementById('hero-btn').innerText = data.btnText;
-            }
+            // Fetch all sections from the Supabase database
+            const { data: sections, error } = await supabase.from('portfolio_content').select('*');
+            
+            if (error) throw error;
+            if (!sections) return;
 
-            // 2. About Section
-            const aboutSnap = await getDoc(doc(db, "portfolio", "about_section"));
-            if (aboutSnap.exists()) {
-                const data = aboutSnap.data();
-                if (data.label) document.getElementById('about-label').innerText = data.label;
-                if (data.heading) document.getElementById('about-heading').innerText = data.heading;
-                if (data.desc) document.getElementById('about-desc').innerText = data.desc;
-                if (data.imageUrl) document.getElementById('about-img-container').style.backgroundImage = `url('${data.imageUrl}')`;
-                
-                if (data.skills) {
-                    const skillsContainer = document.getElementById('skills-container');
-                    skillsContainer.innerHTML = data.skills.map(s => `
-                        <div class="skill-bar">
-                            <div class="skill-info"><span>${s.name}</span><span>${s.percent}%</span></div>
-                            <div class="progress-bg"><div class="progress-fill" style="width: ${s.percent}%"></div></div>
-                        </div>
-                    `).join('');
+            // Loop through data and inject into HTML based on section ID
+            sections.forEach(section => {
+                const id = section.section_name;
+                const d = section.data;
+
+                if (id === 'hero_section') {
+                    if (d.subtitle) document.getElementById('hero-subtitle').innerText = d.subtitle;
+                    if (d.title) document.getElementById('hero-title').innerText = d.title;
+                    if (d.btnText) document.getElementById('hero-btn').innerText = d.btnText;
                 }
-            }
-
-            // 3. Services Section
-            const servicesSnap = await getDoc(doc(db, "portfolio", "services_section"));
-            if (servicesSnap.exists()) {
-                const data = servicesSnap.data();
-                if (data.label) document.getElementById('services-label').innerText = data.label;
-                if (data.heading) document.getElementById('services-heading').innerText = data.heading;
-                
-                if (data.items) {
-                    document.getElementById('services-grid').innerHTML = data.items.map((item, idx) => `
-                        <div class="service-card slide-up">
-                            <div class="service-icon">${item.icon || '0' + (idx + 1)}</div>
-                            <h3>${item.title}</h3>
-                            <p>${item.desc}</p>
-                        </div>
-                    `).join('');
-                }
-            }
-
-            // 4. Video Section
-            const videoSnap = await getDoc(doc(db, "portfolio", "video_section"));
-            if (videoSnap.exists()) {
-                const data = videoSnap.data();
-                if (data.title) document.getElementById('video-title').innerText = data.title;
-                if (data.url) document.getElementById('video-link').href = data.url;
-            }
-
-            // 5. Portfolio Projects Section
-            const portfolioSnap = await getDoc(doc(db, "portfolio", "projects_section"));
-            if (portfolioSnap.exists()) {
-                const data = portfolioSnap.data();
-                if (data.label) document.getElementById('portfolio-label').innerText = data.label;
-                if (data.heading) document.getElementById('portfolio-heading').innerText = data.heading;
-
-                if (data.items) {
-                    document.getElementById('portfolio-grid').innerHTML = data.items.map(p => `
-                        <div class="portfolio-item slide-up">
-                            <div class="portfolio-img" style="background-image: url('${p.imageUrl || ''}'); background-size: cover; background-position: center; min-height: 200px;">
-                                ${!p.imageUrl ? '[ Image Placeholder ]' : ''}
+                else if (id === 'about_section') {
+                    if (d.label) document.getElementById('about-label').innerText = d.label;
+                    if (d.heading) document.getElementById('about-heading').innerText = d.heading;
+                    if (d.desc) document.getElementById('about-desc').innerText = d.desc;
+                    if (d.imageUrl) document.getElementById('about-img-container').style.backgroundImage = `url('${d.imageUrl}')`;
+                    
+                    if (d.skills) {
+                        document.getElementById('skills-container').innerHTML = d.skills.map(s => `
+                            <div class="skill-bar">
+                                <div class="skill-info"><span>${s.name}</span><span>${s.percent}%</span></div>
+                                <div class="progress-bg"><div class="progress-fill" style="width: ${s.percent}%"></div></div>
                             </div>
-                            <div class="portfolio-info">
-                                <h5>${p.category}</h5>
-                                <h3>${p.title}</h3>
-                                <p>${p.desc}</p>
-                            </div>
-                        </div>
-                    `).join('');
+                        `).join('');
+                    }
                 }
-            }
-
-            // 6. Team Section
-            const teamSnap = await getDoc(doc(db, "portfolio", "team_section"));
-            if (teamSnap.exists()) {
-                const data = teamSnap.data();
-                if (data.label) document.getElementById('team-label').innerText = data.label;
-                if (data.heading) document.getElementById('team-heading').innerText = data.heading;
-
-                if (data.members) {
-                    document.getElementById('team-grid').innerHTML = data.members.map(m => `
-                        <div class="team-card slide-up">
-                            <div class="team-img" style="background-image: url('${m.imageUrl || ''}'); background-size: cover; background-position: center; min-height: 250px;"></div>
-                            <div class="team-info">
-                                <h3>${m.name}</h3>
-                                <h5>${m.role}</h5>
+                else if (id === 'services_section') {
+                    if (d.label) document.getElementById('services-label').innerText = d.label;
+                    if (d.heading) document.getElementById('services-heading').innerText = d.heading;
+                    if (d.items) {
+                        document.getElementById('services-grid').innerHTML = d.items.map((item, idx) => `
+                            <div class="service-card slide-up">
+                                <div class="service-icon">${item.icon || '0' + (idx + 1)}</div>
+                                <h3>${item.title}</h3>
+                                <p>${item.desc}</p>
                             </div>
-                        </div>
-                    `).join('');
+                        `).join('');
+                    }
                 }
-            }
-
-            // 7. Contact & Footer
-            const contactSnap = await getDoc(doc(db, "portfolio", "contact_section"));
-            if (contactSnap.exists()) {
-                const data = contactSnap.data();
-                if (data.label) document.getElementById('contact-label').innerText = data.label;
-                if (data.heading) document.getElementById('contact-heading').innerText = data.heading;
-                if (data.btnText) document.getElementById('contact-btn-text').innerText = data.btnText;
-                if (data.footer) document.getElementById('footer-text').innerText = data.footer;
-            }
+                else if (id === 'video_section') {
+                    if (d.title) document.getElementById('video-title').innerText = d.title;
+                    if (d.url) document.getElementById('video-link').href = d.url;
+                }
+                else if (id === 'projects_section') {
+                    if (d.label) document.getElementById('portfolio-label').innerText = d.label;
+                    if (d.heading) document.getElementById('portfolio-heading').innerText = d.heading;
+                    if (d.items) {
+                        document.getElementById('portfolio-grid').innerHTML = d.items.map(p => `
+                            <div class="portfolio-item slide-up">
+                                <div class="portfolio-img" style="background-image: url('${p.imageUrl || ''}'); background-size: cover; background-position: center; min-height: 200px;">
+                                    ${!p.imageUrl ? '[ Image Placeholder ]' : ''}
+                                </div>
+                                <div class="portfolio-info">
+                                    <h5>${p.category}</h5>
+                                    <h3>${p.title}</h3>
+                                    <p>${p.desc}</p>
+                                </div>
+                            </div>
+                        `).join('');
+                    }
+                }
+                else if (id === 'team_section') {
+                    if (d.label) document.getElementById('team-label').innerText = d.label;
+                    if (d.heading) document.getElementById('team-heading').innerText = d.heading;
+                    if (d.members) {
+                        document.getElementById('team-grid').innerHTML = d.members.map(m => `
+                            <div class="team-card slide-up">
+                                <div class="team-img" style="background-image: url('${m.imageUrl || ''}'); background-size: cover; background-position: center; min-height: 250px;"></div>
+                                <div class="team-info">
+                                    <h3>${m.name}</h3>
+                                    <h5>${m.role}</h5>
+                                </div>
+                            </div>
+                        `).join('');
+                    }
+                }
+                else if (id === 'contact_section') {
+                    if (d.label) document.getElementById('contact-label').innerText = d.label;
+                    if (d.heading) document.getElementById('contact-heading').innerText = d.heading;
+                    if (d.btnText) document.getElementById('contact-btn-text').innerText = d.btnText;
+                    if (d.footer) document.getElementById('footer-text').innerText = d.footer;
+                }
+            });
 
             // Re-bind Intersection Observer after content inserts
             initObserver();
         } catch (err) {
-            console.error("Error loading portfolio data:", err);
+            console.error("Error loading Supabase data:", err);
         }
     }
 
