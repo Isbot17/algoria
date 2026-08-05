@@ -114,27 +114,18 @@
     </div>
 </div>
 
+<!-- SUPABASE SCRIPT -->
 <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 
-    const firebaseConfig = {
-        apiKey: "AIzaSyCqhh4-Z7KsMP1bnnmsTDt5YXlSA28a0H0",
-        authDomain: "algoria-33961.firebaseapp.com",
-        projectId: "algoria-33961",
-        storageBucket: "algoria-33961.firebasestorage.app",
-        messagingSenderId: "30543782632",
-        appId: "1:30543782632:web:d387115e183a15fe2b5f5d",
-        measurementId: "G-FHHZ358DGR"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
+    const supabaseUrl = 'https://ohrumepiwvmytpwigddx.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9ocnVtZXBpd3ZteXRwd2lnZGR4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU5MTUyMDQsImV4cCI6MjEwMTQ5MTIwNH0.Fy1_dElDAIFDQht7Y--Nt7232qDKeHGjLNdZWc67pVE';
+    
+    const supabase = createClient(supabaseUrl, supabaseKey);
 
     // Auth state control
-    onAuthStateChanged(auth, async (user) => {
+    async function checkUser() {
+        const { data: { user } } = await supabase.auth.getUser();
         if (user) {
             document.getElementById('login-section').style.display = 'none';
             document.getElementById('dashboard-section').style.display = 'block';
@@ -143,57 +134,101 @@
             document.getElementById('login-section').style.display = 'block';
             document.getElementById('dashboard-section').style.display = 'none';
         }
-    });
+    }
+    
+    // Run auth check on page load
+    checkUser();
 
-    document.getElementById('login-btn').addEventListener('click', () => {
-        const e = document.getElementById('admin-email').value;
-        const p = document.getElementById('admin-password').value;
-        signInWithEmailAndPassword(auth, e, p).catch(() => {
+    // Login logic
+    document.getElementById('login-btn').addEventListener('click', async () => {
+        const email = document.getElementById('admin-email').value;
+        const password = document.getElementById('admin-password').value;
+        
+        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) {
             document.getElementById('login-error').style.display = 'block';
-        });
+        } else {
+            document.getElementById('login-error').style.display = 'none';
+            checkUser();
+        }
     });
 
-    document.getElementById('logout-btn').addEventListener('click', () => signOut(auth));
+    // Logout logic
+    document.getElementById('logout-btn').addEventListener('click', async () => {
+        await supabase.auth.signOut();
+        checkUser();
+    });
 
     // Load existing values into form fields
     async function loadAdminData() {
-        const hero = await getDoc(doc(db, "portfolio", "hero_section"));
-        if (hero.exists()) {
-            document.getElementById('hero-subtitle-input').value = hero.data().subtitle || "";
-            document.getElementById('hero-title-input').value = hero.data().title || "";
-            document.getElementById('hero-btn-input').value = hero.data().btnText || "";
-        }
+        const { data } = await supabase.from('portfolio_content').select('*');
+        if (!data) return;
 
-        const about = await getDoc(doc(db, "portfolio", "about_section"));
-        if (about.exists()) {
-            const d = about.data();
-            document.getElementById('about-label-input').value = d.label || "";
-            document.getElementById('about-heading-input').value = d.heading || "";
-            document.getElementById('about-desc-input').value = d.desc || "";
-            document.getElementById('about-img-input').value = d.imageUrl || "";
-            if (d.skills && d.skills[0]) {
-                document.getElementById('s1-name').value = d.skills[0].name;
-                document.getElementById('s1-pct').value = d.skills[0].percent;
+        data.forEach(section => {
+            const d = section.data;
+            if (section.section_name === 'hero_section') {
+                document.getElementById('hero-subtitle-input').value = d.subtitle || "";
+                document.getElementById('hero-title-input').value = d.title || "";
+                document.getElementById('hero-btn-input').value = d.btnText || "";
             }
-            if (d.skills && d.skills[1]) {
-                document.getElementById('s2-name').value = d.skills[1].name;
-                document.getElementById('s2-pct').value = d.skills[1].percent;
+            if (section.section_name === 'about_section') {
+                document.getElementById('about-label-input').value = d.label || "";
+                document.getElementById('about-heading-input').value = d.heading || "";
+                document.getElementById('about-desc-input').value = d.desc || "";
+                document.getElementById('about-img-input').value = d.imageUrl || "";
+                
+                if (d.skills && d.skills[0]) {
+                    document.getElementById('s1-name').value = d.skills[0].name || "";
+                    document.getElementById('s1-pct').value = d.skills[0].percent || "";
+                }
+                if (d.skills && d.skills[1]) {
+                    document.getElementById('s2-name').value = d.skills[1].name || "";
+                    document.getElementById('s2-pct').value = d.skills[1].percent || "";
+                }
             }
-        }
+            if (section.section_name === 'services_section') {
+                document.getElementById('services-label-input').value = d.label || "";
+                document.getElementById('services-heading-input').value = d.heading || "";
+                
+                if (d.items && d.items[0]) {
+                    document.getElementById('srv1-title').value = d.items[0].title || "";
+                    document.getElementById('srv1-desc').value = d.items[0].desc || "";
+                }
+                if (d.items && d.items[1]) {
+                    document.getElementById('srv2-title').value = d.items[1].title || "";
+                    document.getElementById('srv2-desc').value = d.items[1].desc || "";
+                }
+                if (d.items && d.items[2]) {
+                    document.getElementById('srv3-title').value = d.items[2].title || "";
+                    document.getElementById('srv3-desc').value = d.items[2].desc || "";
+                }
+            }
+            if (section.section_name === 'video_section') {
+                document.getElementById('video-title-input').value = d.title || "";
+                document.getElementById('video-url-input').value = d.url || "";
+            }
+            if (section.section_name === 'contact_section') {
+                document.getElementById('contact-label-input').value = d.label || "";
+                document.getElementById('contact-heading-input').value = d.heading || "";
+                document.getElementById('contact-btn-input').value = d.btnText || "";
+                document.getElementById('footer-text-input').value = d.footer || "";
+            }
+        });
     }
 
-    // Save Functions exposed globally
+    // Save Functions exposed globally for the onclick events
     window.saveHero = async () => {
-        await setDoc(doc(db, "portfolio", "hero_section"), {
+        const content = {
             subtitle: document.getElementById('hero-subtitle-input').value,
             title: document.getElementById('hero-title-input').value,
             btnText: document.getElementById('hero-btn-input').value
-        });
+        };
+        await supabase.from('portfolio_content').upsert({ section_name: 'hero_section', data: content });
         showMsg('hero-msg');
     };
 
     window.saveAbout = async () => {
-        await setDoc(doc(db, "portfolio", "about_section"), {
+        const content = {
             label: document.getElementById('about-label-input').value,
             heading: document.getElementById('about-heading-input').value,
             desc: document.getElementById('about-desc-input').value,
@@ -202,12 +237,13 @@
                 { name: document.getElementById('s1-name').value, percent: document.getElementById('s1-pct').value },
                 { name: document.getElementById('s2-name').value, percent: document.getElementById('s2-pct').value }
             ]
-        });
+        };
+        await supabase.from('portfolio_content').upsert({ section_name: 'about_section', data: content });
         showMsg('about-msg');
     };
 
     window.saveServices = async () => {
-        await setDoc(doc(db, "portfolio", "services_section"), {
+        const content = {
             label: document.getElementById('services-label-input').value,
             heading: document.getElementById('services-heading-input').value,
             items: [
@@ -215,25 +251,28 @@
                 { icon: "02", title: document.getElementById('srv2-title').value, desc: document.getElementById('srv2-desc').value },
                 { icon: "03", title: document.getElementById('srv3-title').value, desc: document.getElementById('srv3-desc').value }
             ]
-        });
+        };
+        await supabase.from('portfolio_content').upsert({ section_name: 'services_section', data: content });
         showMsg('services-msg');
     };
 
     window.saveVideo = async () => {
-        await setDoc(doc(db, "portfolio", "video_section"), {
+        const content = {
             title: document.getElementById('video-title-input').value,
             url: document.getElementById('video-url-input').value
-        });
+        };
+        await supabase.from('portfolio_content').upsert({ section_name: 'video_section', data: content });
         showMsg('video-msg');
     };
 
     window.saveContact = async () => {
-        await setDoc(doc(db, "portfolio", "contact_section"), {
+        const content = {
             label: document.getElementById('contact-label-input').value,
             heading: document.getElementById('contact-heading-input').value,
             btnText: document.getElementById('contact-btn-input').value,
             footer: document.getElementById('footer-text-input').value
-        });
+        };
+        await supabase.from('portfolio_content').upsert({ section_name: 'contact_section', data: content });
         showMsg('contact-msg');
     };
 
