@@ -7,22 +7,91 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #f4fbf9; --card-bg: #ffffff;
-            --text-primary: #152b27; --accent: #7bd5c5; --accent-dark: #329684;
+            --bg-color: #f4fbf9; 
+            --card-bg: #ffffff;
+            --text-primary: #152b27; 
+            --accent: #7bd5c5; 
+            --accent-dark: #329684;
         }
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg-color); color: var(--text-primary); margin: 0; padding: 2rem; }
-        .container { max-width: 900px; margin: 0 auto; background: var(--card-bg); padding: 2.5rem; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
-        h1, h2 { color: var(--accent-dark); border-bottom: 2px solid var(--bg-color); padding-bottom: 0.5rem; }
-        .section-box { border: 1px solid #e2e8f0; border-radius: 8px; padding: 1.5rem; margin-bottom: 2rem; background: #fafafa; }
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: var(--bg-color); 
+            color: var(--text-primary); 
+            margin: 0; 
+            padding: 2rem; 
+        }
+        /* Widened container to fit multiple cards per row */
+        .container { 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            background: var(--card-bg); 
+            padding: 2.5rem; 
+            border-radius: 12px; 
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08); 
+        }
+        h1, h2 { 
+            color: var(--accent-dark); 
+        }
+        h1 {
+            border-bottom: 2px solid var(--bg-color); 
+            padding-bottom: 0.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        /* NEW: CSS Grid for arranging cards in rows */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        /* UPDATED: Card styling */
+        .section-box { 
+            border: 1px solid #e2e8f0; 
+            border-radius: 12px; 
+            padding: 1.5rem; 
+            background: #ffffff; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.04);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .section-box:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+        }
+        .section-box h2 {
+            margin-top: 0;
+            font-size: 1.25rem;
+            border-bottom: 1px solid #edf2f7;
+            padding-bottom: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+        
         .form-group { margin-bottom: 1rem; }
         label { display: block; font-weight: 600; margin-bottom: 0.3rem; font-size: 0.85rem; text-transform: uppercase; color: #4a5568; }
-        input, textarea { width: 100%; padding: 0.65rem; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-radius; font-family: inherit; }
+        input, textarea { width: 100%; padding: 0.65rem; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box; font-family: inherit; }
         textarea { height: 80px; resize: vertical; }
-        .btn { background: var(--accent); color: white; padding: 0.75rem 1.5rem; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; transition: 0.3s; }
+        
+        /* Flex alignment to push buttons to the bottom of the card */
+        .card-actions {
+            margin-top: auto;
+            padding-top: 1rem;
+        }
+        
+        .btn { background: var(--accent); color: white; padding: 0.75rem 1.5rem; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; transition: 0.3s; width: 100%; }
         .btn:hover { background: var(--accent-dark); }
-        .btn-danger { background: #e53e3e; margin-top: 1rem; }
+        .btn-danger { background: #e53e3e; margin-top: 1rem; width: auto;}
+        .btn-danger:hover { background: #c53030; }
+        
         #dashboard-section { display: none; }
-        .status-msg { margin-top: 0.5rem; color: #38a169; font-weight: 600; display: none; }
+        .status-msg { margin-top: 0.75rem; color: #38a169; font-weight: 600; display: none; text-align: center; }
+        
+        /* Flexbox for skills */
+        .skill-group { display: flex; gap: 10px; }
+        .skill-group input[type="text"] { flex: 2; }
+        .skill-group input[type="number"] { flex: 1; }
     </style>
 </head>
 <body>
@@ -47,70 +116,92 @@
     <div id="dashboard-section">
         <h1>Portfolio CMS Control Center</h1>
 
-        <!-- HERO SECTION EDIT -->
-        <div class="section-box">
-            <h2>1. Hero Section</h2>
-            <div class="form-group"><label>Subtitle</label><input type="text" id="hero-subtitle-input"></div>
-            <div class="form-group"><label>Main Title</label><input type="text" id="hero-title-input"></div>
-            <div class="form-group"><label>Button Text</label><input type="text" id="hero-btn-input"></div>
-            <button class="btn" onclick="saveHero()">Save Hero Section</button>
-            <p class="status-msg" id="hero-msg">Saved successfully!</p>
-        </div>
-
-        <!-- ABOUT SECTION EDIT -->
-        <div class="section-box">
-            <h2>2. About Section</h2>
-            <div class="form-group"><label>Section Label</label><input type="text" id="about-label-input"></div>
-            <div class="form-group"><label>Heading</label><input type="text" id="about-heading-input"></div>
-            <div class="form-group"><label>Description</label><textarea id="about-desc-input"></textarea></div>
-            <div class="form-group"><label>Image URL</label><input type="text" id="about-img-input" placeholder="https://..."></div>
+        <!-- GRID CONTAINER FOR CARDS -->
+        <div class="dashboard-grid">
             
-            <h3>Skills</h3>
-            <div class="form-group"><label>Skill 1 Name & %</label><input type="text" id="s1-name" style="width:60%; display:inline;"> <input type="number" id="s1-pct" style="width:30%; display:inline;"></div>
-            <div class="form-group"><label>Skill 2 Name & %</label><input type="text" id="s2-name" style="width:60%; display:inline;"> <input type="number" id="s2-pct" style="width:30%; display:inline;"></div>
-            
-            <button class="btn" onclick="saveAbout()">Save About Section</button>
-            <p class="status-msg" id="about-msg">Saved successfully!</p>
+            <!-- HERO SECTION EDIT -->
+            <div class="section-box">
+                <h2>1. Hero Section</h2>
+                <div class="form-group"><label>Subtitle</label><input type="text" id="hero-subtitle-input"></div>
+                <div class="form-group"><label>Main Title</label><input type="text" id="hero-title-input"></div>
+                <div class="form-group"><label>Button Text</label><input type="text" id="hero-btn-input"></div>
+                
+                <div class="card-actions">
+                    <button class="btn" onclick="saveHero()">Save Hero Section</button>
+                    <p class="status-msg" id="hero-msg">Saved successfully!</p>
+                </div>
+            </div>
+
+            <!-- ABOUT SECTION EDIT -->
+            <div class="section-box">
+                <h2>2. About Section</h2>
+                <div class="form-group"><label>Section Label</label><input type="text" id="about-label-input"></div>
+                <div class="form-group"><label>Heading</label><input type="text" id="about-heading-input"></div>
+                <div class="form-group"><label>Description</label><textarea id="about-desc-input"></textarea></div>
+                <div class="form-group"><label>Image URL</label><input type="text" id="about-img-input" placeholder="https://..."></div>
+                
+                <label>Skills</label>
+                <div class="form-group skill-group"><input type="text" id="s1-name" placeholder="Skill 1 Name"> <input type="number" id="s1-pct" placeholder="%"></div>
+                <div class="form-group skill-group"><input type="text" id="s2-name" placeholder="Skill 2 Name"> <input type="number" id="s2-pct" placeholder="%"></div>
+                
+                <div class="card-actions">
+                    <button class="btn" onclick="saveAbout()">Save About Section</button>
+                    <p class="status-msg" id="about-msg">Saved successfully!</p>
+                </div>
+            </div>
+
+            <!-- SERVICES EDIT -->
+            <div class="section-box">
+                <h2>3. Services Section</h2>
+                <div class="form-group"><label>Section Label</label><input type="text" id="services-label-input"></div>
+                <div class="form-group"><label>Heading</label><input type="text" id="services-heading-input"></div>
+                
+                <label>Service 1</label>
+                <div class="form-group"><input type="text" id="srv1-title" placeholder="Title"> <textarea id="srv1-desc" placeholder="Description"></textarea></div>
+                
+                <label>Service 2</label>
+                <div class="form-group"><input type="text" id="srv2-title" placeholder="Title"> <textarea id="srv2-desc" placeholder="Description"></textarea></div>
+                
+                <label>Service 3</label>
+                <div class="form-group"><input type="text" id="srv3-title" placeholder="Title"> <textarea id="srv3-desc" placeholder="Description"></textarea></div>
+
+                <div class="card-actions">
+                    <button class="btn" onclick="saveServices()">Save Services</button>
+                    <p class="status-msg" id="services-msg">Saved successfully!</p>
+                </div>
+            </div>
+
+            <!-- VIDEO SECTION -->
+            <div class="section-box">
+                <h2>4. Video Banner</h2>
+                <div class="form-group"><label>Banner Title</label><input type="text" id="video-title-input"></div>
+                <div class="form-group"><label>Video Link URL</label><input type="text" id="video-url-input"></div>
+                
+                <div class="card-actions">
+                    <button class="btn" onclick="saveVideo()">Save Video Section</button>
+                    <p class="status-msg" id="video-msg">Saved successfully!</p>
+                </div>
+            </div>
+
+            <!-- CONTACT & FOOTER EDIT -->
+            <div class="section-box">
+                <h2>5. Contact & Footer</h2>
+                <div class="form-group"><label>Contact Label</label><input type="text" id="contact-label-input"></div>
+                <div class="form-group"><label>Contact Heading</label><input type="text" id="contact-heading-input"></div>
+                <div class="form-group"><label>Button Label</label><input type="text" id="contact-btn-input"></div>
+                <div class="form-group"><label>Footer Text</label><input type="text" id="footer-text-input"></div>
+                
+                <div class="card-actions">
+                    <button class="btn" onclick="saveContact()">Save Contact & Footer</button>
+                    <p class="status-msg" id="contact-msg">Saved successfully!</p>
+                </div>
+            </div>
+
+        </div> <!-- END OF GRID -->
+
+        <div style="border-top: 1px solid #e2e8f0; padding-top: 1.5rem; text-align: right;">
+            <button class="btn btn-danger" id="logout-btn">Logout of Admin Portal</button>
         </div>
-
-        <!-- SERVICES EDIT -->
-        <div class="section-box">
-            <h2>3. Services Section</h2>
-            <div class="form-group"><label>Section Label</label><input type="text" id="services-label-input"></div>
-            <div class="form-group"><label>Heading</label><input type="text" id="services-heading-input"></div>
-            
-            <h4>Service 1</h4>
-            <div class="form-group"><input type="text" id="srv1-title" placeholder="Title"> <textarea id="srv1-desc" placeholder="Description"></textarea></div>
-            <h4>Service 2</h4>
-            <div class="form-group"><input type="text" id="srv2-title" placeholder="Title"> <textarea id="srv2-desc" placeholder="Description"></textarea></div>
-            <h4>Service 3</h4>
-            <div class="form-group"><input type="text" id="srv3-title" placeholder="Title"> <textarea id="srv3-desc" placeholder="Description"></textarea></div>
-
-            <button class="btn" onclick="saveServices()">Save Services</button>
-            <p class="status-msg" id="services-msg">Saved successfully!</p>
-        </div>
-
-        <!-- VIDEO SECTION -->
-        <div class="section-box">
-            <h2>4. Video Banner</h2>
-            <div class="form-group"><label>Banner Title</label><input type="text" id="video-title-input"></div>
-            <div class="form-group"><label>Video Link URL</label><input type="text" id="video-url-input"></div>
-            <button class="btn" onclick="saveVideo()">Save Video Section</button>
-            <p class="status-msg" id="video-msg">Saved successfully!</p>
-        </div>
-
-        <!-- CONTACT & FOOTER EDIT -->
-        <div class="section-box">
-            <h2>5. Contact & Footer</h2>
-            <div class="form-group"><label>Contact Label</label><input type="text" id="contact-label-input"></div>
-            <div class="form-group"><label>Contact Heading</label><input type="text" id="contact-heading-input"></div>
-            <div class="form-group"><label>Button Label</label><input type="text" id="contact-btn-input"></div>
-            <div class="form-group"><label>Footer Text</label><input type="text" id="footer-text-input"></div>
-            <button class="btn" onclick="saveContact()">Save Contact & Footer</button>
-            <p class="status-msg" id="contact-msg">Saved successfully!</p>
-        </div>
-
-        <button class="btn btn-danger" id="logout-btn">Logout</button>
     </div>
 </div>
 
@@ -217,23 +308,23 @@
     }
 
     // Save Functions exposed globally for the onclick events
-window.saveHero = async () => {
-    const content = {
-        subtitle: document.getElementById('hero-subtitle-input').value,
-        title: document.getElementById('hero-title-input').value,
-        btnText: document.getElementById('hero-btn-input').value
+    window.saveHero = async () => {
+        const content = {
+            subtitle: document.getElementById('hero-subtitle-input').value,
+            title: document.getElementById('hero-title-input').value,
+            btnText: document.getElementById('hero-btn-input').value
+        };
+        
+        // Catch any errors that happen during the upsert
+        const { error } = await supabase.from('portfolio_content').upsert({ section_name: 'hero_section', data: content });
+        
+        if (error) {
+            console.error("Supabase Error:", error);
+            alert("Failed to save! Check the console.");
+        } else {
+            showMsg('hero-msg'); // Only show success if there was no error
+        }
     };
-    
-    // Catch any errors that happen during the upsert
-    const { error } = await supabase.from('portfolio_content').upsert({ section_name: 'hero_section', data: content });
-    
-    if (error) {
-        console.error("Supabase Error:", error);
-        alert("Failed to save! Check the console.");
-    } else {
-        showMsg('hero-msg'); // Only show success if there was no error
-    }
-};
 
     window.saveAbout = async () => {
         const content = {
