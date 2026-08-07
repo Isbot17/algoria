@@ -186,6 +186,11 @@
             box-sizing: border-box;
             transition: border-color 0.2s, box-shadow 0.2s;
         }
+        input[type="color"] {
+            padding: 0.25rem;
+            height: 42px;
+            cursor: pointer;
+        }
         input:focus, textarea:focus {
             outline: none;
             border-color: var(--primary);
@@ -253,7 +258,8 @@
                 <h1>Algoria CMS</h1>
             </div>
             <nav class="sidebar-nav">
-                <a href="#" class="nav-link active" data-target="view-hero">Hero Section</a>
+                <a href="#" class="nav-link active" data-target="view-theme">Theme Colors</a>
+                <a href="#" class="nav-link" data-target="view-hero">Hero Section</a>
                 <a href="#" class="nav-link" data-target="view-about">About Section</a>
                 <a href="#" class="nav-link" data-target="view-services">Services</a>
                 <a href="#" class="nav-link" data-target="view-video">Video Banner</a>
@@ -267,13 +273,66 @@
         <!-- Main Content -->
         <main class="main-content">
             <header class="topbar">
-                <h2 id="topbar-title">Hero Section Configuration</h2>
+                <h2 id="topbar-title">Theme Colors Configuration</h2>
             </header>
             
             <div class="content-scroll">
                 
+                <!-- THEME VIEW -->
+                <div class="view-panel active" id="view-theme">
+                    <div class="admin-panel">
+                        <div class="panel-header"><h3>Site Color Palette</h3></div>
+                        <div class="panel-body">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Main Accent (Brand Color)</label>
+                                    <input type="color" id="color-accent" value="#7bd5c5">
+                                </div>
+                                <div class="form-group">
+                                    <label>Dark Accent (Buttons Hover/Headers)</label>
+                                    <input type="color" id="color-accent-dark" value="#329684">
+                                </div>
+                                <div class="form-group">
+                                    <label>Light Accent (Highlights/Bars)</label>
+                                    <input type="color" id="color-accent-light" value="#e6f7f4">
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Global Background</label>
+                                    <input type="color" id="color-bg" value="#f4fbf9">
+                                </div>
+                                <div class="form-group">
+                                    <label>Alternate Background (Sections)</label>
+                                    <input type="color" id="color-bg-alt" value="#ffffff">
+                                </div>
+                                <div class="form-group">
+                                    <label>Card Background</label>
+                                    <input type="color" id="color-card-bg" value="#ffffff">
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Primary Text Color</label>
+                                    <input type="color" id="color-text-primary" value="#152b27">
+                                </div>
+                                <div class="form-group">
+                                    <label>Secondary Text Color</label>
+                                    <input type="color" id="color-text-secondary" value="#5c7d77">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-footer">
+                            <p class="status-msg" id="theme-msg">✓ Saved successfully</p>
+                            <button class="btn" onclick="saveTheme()">Save Theme Colors</button>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- HERO VIEW -->
-                <div class="view-panel active" id="view-hero">
+                <div class="view-panel" id="view-hero">
                     <div class="admin-panel">
                         <div class="panel-header"><h3>Content Elements</h3></div>
                         <div class="panel-body">
@@ -425,7 +484,7 @@
         const { data: { user } } = await supabase.auth.getUser();
         if (user) {
             document.getElementById('login-section').style.display = 'none';
-            document.getElementById('dashboard-section').style.display = 'flex'; // Changed to flex for sidebar layout
+            document.getElementById('dashboard-section').style.display = 'flex'; 
             loadAdminData();
         } else {
             document.getElementById('login-section').style.display = 'flex';
@@ -461,6 +520,19 @@
 
         data.forEach(section => {
             const d = section.data;
+            
+            // LOAD THEME DATA
+            if (section.section_name === 'theme_section') {
+                if (d.accent) document.getElementById('color-accent').value = d.accent;
+                if (d.accentDark) document.getElementById('color-accent-dark').value = d.accentDark;
+                if (d.accentLight) document.getElementById('color-accent-light').value = d.accentLight;
+                if (d.bgColor) document.getElementById('color-bg').value = d.bgColor;
+                if (d.bgAlt) document.getElementById('color-bg-alt').value = d.bgAlt;
+                if (d.cardBg) document.getElementById('color-card-bg').value = d.cardBg;
+                if (d.textPrimary) document.getElementById('color-text-primary').value = d.textPrimary;
+                if (d.textSecondary) document.getElementById('color-text-secondary').value = d.textSecondary;
+            }
+            
             if (section.section_name === 'hero_section') {
                 document.getElementById('hero-subtitle-input').value = d.subtitle || "";
                 document.getElementById('hero-title-input').value = d.title || "";
@@ -512,6 +584,21 @@
     }
 
     // Save Functions
+    window.saveTheme = async () => {
+        const content = {
+            accent: document.getElementById('color-accent').value,
+            accentDark: document.getElementById('color-accent-dark').value,
+            accentLight: document.getElementById('color-accent-light').value,
+            bgColor: document.getElementById('color-bg').value,
+            bgAlt: document.getElementById('color-bg-alt').value,
+            cardBg: document.getElementById('color-card-bg').value,
+            textPrimary: document.getElementById('color-text-primary').value,
+            textSecondary: document.getElementById('color-text-secondary').value
+        };
+        const { error } = await supabase.from('portfolio_content').upsert({ section_name: 'theme_section', data: content });
+        if (error) { alert("Failed to save theme! Check the console."); } else { showMsg('theme-msg'); }
+    };
+
     window.saveHero = async () => {
         const content = {
             subtitle: document.getElementById('hero-subtitle-input').value,
@@ -533,8 +620,8 @@
                 { name: document.getElementById('s2-name').value, percent: document.getElementById('s2-pct').value }
             ]
         };
-        await supabase.from('portfolio_content').upsert({ section_name: 'about_section', data: content });
-        showMsg('about-msg');
+        const { error } = await supabase.from('portfolio_content').upsert({ section_name: 'about_section', data: content });
+        if (error) { alert("Failed to save! Check the console."); } else { showMsg('about-msg'); }
     };
 
     window.saveServices = async () => {
@@ -547,8 +634,8 @@
                 { icon: "03", title: document.getElementById('srv3-title').value, desc: document.getElementById('srv3-desc').value }
             ]
         };
-        await supabase.from('portfolio_content').upsert({ section_name: 'services_section', data: content });
-        showMsg('services-msg');
+        const { error } = await supabase.from('portfolio_content').upsert({ section_name: 'services_section', data: content });
+        if (error) { alert("Failed to save! Check the console."); } else { showMsg('services-msg'); }
     };
 
     window.saveVideo = async () => {
@@ -556,8 +643,8 @@
             title: document.getElementById('video-title-input').value,
             url: document.getElementById('video-url-input').value
         };
-        await supabase.from('portfolio_content').upsert({ section_name: 'video_section', data: content });
-        showMsg('video-msg');
+        const { error } = await supabase.from('portfolio_content').upsert({ section_name: 'video_section', data: content });
+        if (error) { alert("Failed to save! Check the console."); } else { showMsg('video-msg'); }
     };
 
     window.saveContact = async () => {
@@ -567,8 +654,8 @@
             btnText: document.getElementById('contact-btn-input').value,
             footer: document.getElementById('footer-text-input').value
         };
-        await supabase.from('portfolio_content').upsert({ section_name: 'contact_section', data: content });
-        showMsg('contact-msg');
+        const { error } = await supabase.from('portfolio_content').upsert({ section_name: 'contact_section', data: content });
+        if (error) { alert("Failed to save! Check the console."); } else { showMsg('contact-msg'); }
     };
 
     function showMsg(id) {
