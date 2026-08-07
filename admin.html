@@ -4,288 +4,414 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Full Admin Dashboard | Algoria</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #eef2f6; 
-            --card-bg: #ffffff;
-            --text-primary: #1e293b; 
-            --accent: #0f172a; 
-            --accent-light: #334155;
+            --sidebar-bg: #0f172a;
+            --sidebar-hover: #1e293b;
+            --sidebar-text: #94a3b8;
+            --sidebar-text-active: #ffffff;
+            --main-bg: #f1f5f9;
+            --panel-bg: #ffffff;
+            --border-color: #e2e8f0;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
             --success: #10b981;
+            --danger: #ef4444;
         }
+
         body { 
             font-family: 'Inter', sans-serif; 
-            background-color: var(--bg-color); 
-            color: var(--text-primary); 
             margin: 0; 
-            padding: 2rem; 
-        }
-        
-        .header-container {
-            max-width: 1200px;
-            margin: 0 auto 2rem auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        h1 { 
-            color: var(--accent); 
-            margin: 0;
-            font-size: 1.8rem;
-        }
-
-        /* The Grid: Forces 2 equal columns to create distinct rows of cards */
-        .dashboard-grid {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 2.5rem;
-            margin-bottom: 3rem;
-        }
-
-        /* Mobile fallback so it doesn't break on small screens */
-        @media (max-width: 900px) {
-            .dashboard-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* Distinct Card Design */
-        .section-box { 
-            background: var(--card-bg); 
-            border-radius: 12px; 
-            box-shadow: 0 8px 24px rgba(0,0,0,0.06);
-            display: flex;
-            flex-direction: column;
+            padding: 0; 
+            background-color: var(--main-bg);
+            color: var(--text-main);
+            height: 100vh;
             overflow: hidden;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-        
-        .section-box:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 32px rgba(0,0,0,0.1);
+            display: flex;
         }
 
-        /* Colored Card Headers */
-        .section-box h2 {
-            margin: 0;
-            background: var(--accent);
-            color: white;
-            font-size: 1.1rem;
-            padding: 1.2rem 1.5rem;
-            font-weight: 600;
+        /* --- LOGIN SCREEN --- */
+        #login-section { 
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #e2e8f0;
+        }
+        .login-card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            width: 100%;
+            max-width: 380px;
+        }
+        .login-card h2 { margin: 0 0 1.5rem 0; color: var(--text-main); text-align: center; }
+
+        /* --- ADMIN DASHBOARD LAYOUT --- */
+        #dashboard-section {
+            display: none;
+            width: 100%;
+            height: 100vh;
         }
 
-        /* Card Body Padding */
-        .card-body {
-            padding: 1.5rem;
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background-color: var(--sidebar-bg);
             display: flex;
             flex-direction: column;
-            flex-grow: 1;
+            border-right: 1px solid #1e293b;
         }
-        
-        .form-group { margin-bottom: 1.2rem; }
-        
-        label { 
-            display: block; 
-            font-weight: 600; 
-            margin-bottom: 0.4rem; 
-            font-size: 0.8rem; 
-            text-transform: uppercase; 
-            color: #64748b; 
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--sidebar-hover);
+        }
+        .sidebar-header h1 {
+            color: white;
+            font-size: 1.25rem;
+            margin: 0;
+            font-weight: 700;
             letter-spacing: 0.5px;
         }
-        
-        input, textarea { 
-            width: 100%; 
-            padding: 0.75rem; 
-            border: 1px solid #cbd5e1; 
-            border-radius: 6px; 
-            box-sizing: border-box; 
-            font-family: inherit;
+        .sidebar-nav {
+            padding: 1rem 0;
+            flex-grow: 1;
+        }
+        .nav-link {
+            display: block;
+            padding: 0.875rem 1.5rem;
+            color: var(--sidebar-text);
+            text-decoration: none;
+            font-weight: 500;
             font-size: 0.95rem;
-            transition: border-color 0.2s;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+        }
+        .nav-link:hover {
+            background-color: var(--sidebar-hover);
+            color: var(--sidebar-text-active);
+        }
+        .nav-link.active {
+            background-color: var(--sidebar-hover);
+            color: var(--sidebar-text-active);
+            border-left-color: var(--primary);
+        }
+        .sidebar-footer {
+            padding: 1.5rem;
+            border-top: 1px solid var(--sidebar-hover);
         }
 
+        /* Main Content Area */
+        .main-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        .topbar {
+            background: white;
+            height: 70px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            padding: 0 2rem;
+        }
+        .topbar h2 {
+            margin: 0;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        .content-scroll {
+            padding: 2rem;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+
+        /* View Panels (Tabs) */
+        .view-panel { display: none; }
+        .view-panel.active { display: block; animation: fadeIn 0.3s; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Form Styling */
+        .admin-panel {
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            max-width: 800px;
+        }
+        .panel-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            background: #f8fafc;
+            border-radius: 8px 8px 0 0;
+        }
+        .panel-header h3 { margin: 0; font-size: 1rem; color: var(--text-main); }
+        .panel-body { padding: 1.5rem; }
+        .panel-footer {
+            padding: 1.25rem 1.5rem;
+            border-top: 1px solid var(--border-color);
+            background: #f8fafc;
+            border-radius: 0 0 8px 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .form-group { margin-bottom: 1.25rem; }
+        label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 0.6rem 0.75rem;
+            border: 1px solid #cbd5e1;
+            border-radius: 4px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            color: var(--text-main);
+            box-sizing: border-box;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
         input:focus, textarea:focus {
             outline: none;
-            border-color: var(--accent-light);
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
+        textarea { height: 100px; resize: vertical; }
 
-        textarea { height: 90px; resize: vertical; }
-        
-        .card-actions {
-            margin-top: auto;
-            padding-top: 1rem;
+        .form-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.25rem;
         }
-        
-        .btn { 
-            background: var(--accent); 
-            color: white; 
-            padding: 0.8rem 1.5rem; 
-            border: none; 
-            border-radius: 6px; 
-            font-weight: 600; 
-            cursor: pointer; 
-            transition: 0.2s; 
-            width: 100%; 
-            font-size: 0.95rem;
-        }
-        
-        .btn:hover { background: var(--accent-light); }
-        .btn-danger { background: #ef4444; width: auto; padding: 0.6rem 1.2rem; }
-        .btn-danger:hover { background: #dc2626; }
-        
-        #dashboard-section { display: none; }
-        #login-section { max-width: 400px; margin: 4rem auto; background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.06); }
-        #login-section h2 { color: var(--accent); margin-top: 0; }
-        
-        .status-msg { 
-            margin-top: 0.75rem; 
-            color: var(--success); 
-            font-weight: 600; 
-            display: none; 
-            text-align: center; 
-            background: #d1fae5;
-            padding: 0.5rem;
+        .form-row .form-group { margin-bottom: 0; flex: 1; }
+
+        /* Buttons & Alerts */
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.25rem;
             border-radius: 4px;
+            font-weight: 500;
             font-size: 0.9rem;
+            cursor: pointer;
+            transition: background 0.2s;
         }
+        .btn:hover { background: var(--primary-hover); }
+        .btn-danger { background: transparent; border: 1px solid var(--sidebar-text); color: var(--sidebar-text); width: 100%; }
+        .btn-danger:hover { background: rgba(255,255,255,0.05); color: white; border-color: white; }
         
-        .skill-group { display: flex; gap: 15px; }
-        .skill-group input[type="text"] { flex: 2; }
-        .skill-group input[type="number"] { flex: 1; }
-        .divider { height: 1px; background: #e2e8f0; margin: 1.5rem 0; }
+        .status-msg {
+            color: var(--success);
+            font-weight: 500;
+            font-size: 0.9rem;
+            display: none;
+            margin: 0;
+        }
     </style>
 </head>
 <body>
 
-    <!-- LOGIN FORM -->
+    <!-- LOGIN SCREEN -->
     <div id="login-section">
-        <h2>Admin Portal Sign In</h2>
-        <div class="form-group">
-            <label>Email</label>
-            <input type="email" id="admin-email" placeholder="admin@algoria.com">
+        <div class="login-card">
+            <h2>Algoria CMS</h2>
+            <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" id="admin-email" placeholder="admin@domain.com">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="admin-password">
+            </div>
+            <button class="btn" style="width: 100%; margin-top: 0.5rem;" id="login-btn">Sign In</button>
+            <p id="login-error" style="color:var(--danger); display:none; margin-top:1rem; text-align: center; font-size: 0.9rem;">Invalid credentials.</p>
         </div>
-        <div class="form-group">
-            <label>Password</label>
-            <input type="password" id="admin-password">
-        </div>
-        <button class="btn" id="login-btn">Login</button>
-        <p id="login-error" style="color:#ef4444; display:none; margin-top:1rem; text-align: center;">Invalid Login Credentials</p>
     </div>
 
-    <!-- DASHBOARD FORM -->
-    <div id="dashboard-section">
+    <!-- ADMIN DASHBOARD -->
+    <div id="dashboard-section" style="display: none;">
         
-        <div class="header-container">
-            <h1>Portfolio CMS Control Center</h1>
-            <button class="btn btn-danger" id="logout-btn">Logout</button>
-        </div>
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1>Algoria CMS</h1>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-link active" data-target="view-hero">Hero Section</a>
+                <a href="#" class="nav-link" data-target="view-about">About Section</a>
+                <a href="#" class="nav-link" data-target="view-services">Services</a>
+                <a href="#" class="nav-link" data-target="view-video">Video Banner</a>
+                <a href="#" class="nav-link" data-target="view-contact">Contact & Footer</a>
+            </nav>
+            <div class="sidebar-footer">
+                <button class="btn btn-danger" id="logout-btn">Log Out</button>
+            </div>
+        </aside>
 
-        <!-- GRID CONTAINER FOR CARDS -->
-        <div class="dashboard-grid">
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="topbar">
+                <h2 id="topbar-title">Hero Section Configuration</h2>
+            </header>
             
-            <!-- HERO SECTION CARD -->
-            <div class="section-box">
-                <h2>1. Home Section</h2>
-                <div class="card-body">
-                    <div class="form-group"><label>Subtitle</label><input type="text" id="hero-subtitle-input"></div>
-                    <div class="form-group"><label>Main Title</label><input type="text" id="hero-title-input"></div>
-                    <div class="form-group"><label>Button Text</label><input type="text" id="hero-btn-input"></div>
-                    
-                    <div class="card-actions">
-                        <button class="btn" onclick="saveHero()">Save Hero Section</button>
-                        <p class="status-msg" id="hero-msg">Saved successfully!</p>
+            <div class="content-scroll">
+                
+                <!-- HERO VIEW -->
+                <div class="view-panel active" id="view-hero">
+                    <div class="admin-panel">
+                        <div class="panel-header"><h3>Content Elements</h3></div>
+                        <div class="panel-body">
+                            <div class="form-group"><label>Subtitle</label><input type="text" id="hero-subtitle-input"></div>
+                            <div class="form-group"><label>Main Title</label><input type="text" id="hero-title-input"></div>
+                            <div class="form-group"><label>Call to Action (Button Text)</label><input type="text" id="hero-btn-input"></div>
+                        </div>
+                        <div class="panel-footer">
+                            <p class="status-msg" id="hero-msg">✓ Saved successfully</p>
+                            <button class="btn" onclick="saveHero()">Save Changes</button>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- ABOUT SECTION CARD -->
-            <div class="section-box">
-                <h2>2. About Section</h2>
-                <div class="card-body">
-                    <div class="form-group"><label>Section Label</label><input type="text" id="about-label-input"></div>
-                    <div class="form-group"><label>Heading</label><input type="text" id="about-heading-input"></div>
-                    <div class="form-group"><label>Description</label><textarea id="about-desc-input"></textarea></div>
-                    <div class="form-group"><label>Image URL</label><input type="text" id="about-img-input" placeholder="https://..."></div>
-                    
-                    <div class="divider"></div>
-                    
-                    <label>Skills Tracker</label>
-                    <div class="form-group skill-group"><input type="text" id="s1-name" placeholder="Skill 1 Name"> <input type="number" id="s1-pct" placeholder="%"></div>
-                    <div class="form-group skill-group"><input type="text" id="s2-name" placeholder="Skill 2 Name"> <input type="number" id="s2-pct" placeholder="%"></div>
-                    
-                    <div class="card-actions">
-                        <button class="btn" onclick="saveAbout()">Save About Section</button>
-                        <p class="status-msg" id="about-msg">Saved successfully!</p>
+                <!-- ABOUT VIEW -->
+                <div class="view-panel" id="view-about">
+                    <div class="admin-panel">
+                        <div class="panel-header"><h3>General Details</h3></div>
+                        <div class="panel-body">
+                            <div class="form-group"><label>Section Label</label><input type="text" id="about-label-input"></div>
+                            <div class="form-group"><label>Heading</label><input type="text" id="about-heading-input"></div>
+                            <div class="form-group"><label>Description</label><textarea id="about-desc-input"></textarea></div>
+                            <div class="form-group"><label>Cover Image URL</label><input type="text" id="about-img-input" placeholder="https://..."></div>
+                        </div>
+                        
+                        <div class="panel-header" style="border-top: 1px solid var(--border-color); border-radius: 0;"><h3>Skills Tracker</h3></div>
+                        <div class="panel-body">
+                            <div class="form-row">
+                                <div class="form-group" style="flex: 2;"><label>Skill 1 Name</label><input type="text" id="s1-name"></div>
+                                <div class="form-group"><label>Percentage</label><input type="number" id="s1-pct"></div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group" style="flex: 2;"><label>Skill 2 Name</label><input type="text" id="s2-name"></div>
+                                <div class="form-group"><label>Percentage</label><input type="number" id="s2-pct"></div>
+                            </div>
+                        </div>
+
+                        <div class="panel-footer">
+                            <p class="status-msg" id="about-msg">✓ Saved successfully</p>
+                            <button class="btn" onclick="saveAbout()">Save Changes</button>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- SERVICES CARD -->
-            <div class="section-box">
-                <h2>3. Services Section</h2>
-                <div class="card-body">
-                    <div class="form-group"><label>Section Label</label><input type="text" id="services-label-input"></div>
-                    <div class="form-group"><label>Heading</label><input type="text" id="services-heading-input"></div>
-                    
-                    <div class="divider"></div>
-                    
-                    <label>Service 1</label>
-                    <div class="form-group"><input type="text" id="srv1-title" placeholder="Title"> <textarea id="srv1-desc" placeholder="Description" style="height:60px; margin-top:5px;"></textarea></div>
-                    
-                    <label>Service 2</label>
-                    <div class="form-group"><input type="text" id="srv2-title" placeholder="Title"> <textarea id="srv2-desc" placeholder="Description" style="height:60px; margin-top:5px;"></textarea></div>
-                    
-                    <label>Service 3</label>
-                    <div class="form-group"><input type="text" id="srv3-title" placeholder="Title"> <textarea id="srv3-desc" placeholder="Description" style="height:60px; margin-top:5px;"></textarea></div>
+                <!-- SERVICES VIEW -->
+                <div class="view-panel" id="view-services">
+                    <div class="admin-panel">
+                        <div class="panel-header"><h3>Header Details</h3></div>
+                        <div class="panel-body">
+                            <div class="form-group"><label>Section Label</label><input type="text" id="services-label-input"></div>
+                            <div class="form-group"><label>Heading</label><input type="text" id="services-heading-input"></div>
+                        </div>
 
-                    <div class="card-actions">
-                        <button class="btn" onclick="saveServices()">Save Services</button>
-                        <p class="status-msg" id="services-msg">Saved successfully!</p>
+                        <div class="panel-header" style="border-top: 1px solid var(--border-color); border-radius: 0;"><h3>Service Cards</h3></div>
+                        <div class="panel-body">
+                            <div class="form-row">
+                                <div class="form-group" style="flex: 1;"><label>Service 1 Title</label><input type="text" id="srv1-title"></div>
+                                <div class="form-group" style="flex: 2;"><label>Description</label><input type="text" id="srv1-desc"></div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group" style="flex: 1;"><label>Service 2 Title</label><input type="text" id="srv2-title"></div>
+                                <div class="form-group" style="flex: 2;"><label>Description</label><input type="text" id="srv2-desc"></div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group" style="flex: 1;"><label>Service 3 Title</label><input type="text" id="srv3-title"></div>
+                                <div class="form-group" style="flex: 2;"><label>Description</label><input type="text" id="srv3-desc"></div>
+                            </div>
+                        </div>
+
+                        <div class="panel-footer">
+                            <p class="status-msg" id="services-msg">✓ Saved successfully</p>
+                            <button class="btn" onclick="saveServices()">Save Changes</button>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- VIDEO BANNER CARD -->
-            <div class="section-box">
-                <h2>4. Video Banner</h2>
-                <div class="card-body">
-                    <div class="form-group"><label>Banner Title</label><input type="text" id="video-title-input"></div>
-                    <div class="form-group"><label>Video Link URL</label><input type="text" id="video-url-input"></div>
-                    
-                    <div class="card-actions">
-                        <button class="btn" onclick="saveVideo()">Save Video Section</button>
-                        <p class="status-msg" id="video-msg">Saved successfully!</p>
+                <!-- VIDEO VIEW -->
+                <div class="view-panel" id="view-video">
+                    <div class="admin-panel">
+                        <div class="panel-header"><h3>Media Settings</h3></div>
+                        <div class="panel-body">
+                            <div class="form-group"><label>Banner Title</label><input type="text" id="video-title-input"></div>
+                            <div class="form-group"><label>Video Link URL (YouTube/Vimeo)</label><input type="text" id="video-url-input"></div>
+                        </div>
+                        <div class="panel-footer">
+                            <p class="status-msg" id="video-msg">✓ Saved successfully</p>
+                            <button class="btn" onclick="saveVideo()">Save Changes</button>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- CONTACT & FOOTER CARD -->
-            <div class="section-box">
-                <h2>5. Book & Footer</h2>
-                <div class="card-body">
-                    <div class="form-group"><label>Contact Label</label><input type="text" id="contact-label-input"></div>
-                    <div class="form-group"><label>Contact Heading</label><input type="text" id="contact-heading-input"></div>
-                    <div class="form-group"><label>Button Label</label><input type="text" id="contact-btn-input"></div>
-                    <div class="divider"></div>
-                    <div class="form-group"><label>Footer Text</label><input type="text" id="footer-text-input"></div>
-                    
-                    <div class="card-actions">
-                        <button class="btn" onclick="saveContact()">Save Contact & Footer</button>
-                        <p class="status-msg" id="contact-msg">Saved successfully!</p>
+                <!-- CONTACT & FOOTER VIEW -->
+                <div class="view-panel" id="view-contact">
+                    <div class="admin-panel">
+                        <div class="panel-header"><h3>Contact Block</h3></div>
+                        <div class="panel-body">
+                            <div class="form-group"><label>Contact Label</label><input type="text" id="contact-label-input"></div>
+                            <div class="form-group"><label>Contact Heading</label><input type="text" id="contact-heading-input"></div>
+                            <div class="form-group"><label>Button Text</label><input type="text" id="contact-btn-input"></div>
+                        </div>
+                        
+                        <div class="panel-header" style="border-top: 1px solid var(--border-color); border-radius: 0;"><h3>Global Footer</h3></div>
+                        <div class="panel-body">
+                            <div class="form-group"><label>Copyright / Footer Text</label><input type="text" id="footer-text-input"></div>
+                        </div>
+
+                        <div class="panel-footer">
+                            <p class="status-msg" id="contact-msg">✓ Saved successfully</p>
+                            <button class="btn" onclick="saveContact()">Save Changes</button>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-        </div> <!-- END OF GRID -->
+            </div>
+        </main>
     </div>
 
-<!-- SUPABASE SCRIPT -->
+<!-- UI INTERACTION SCRIPT (TABS) -->
+<script>
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            // Remove active state from all links and panels
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
+            
+            // Add active state to clicked link and corresponding panel
+            link.classList.add('active');
+            const targetId = link.getAttribute('data-target');
+            document.getElementById(targetId).classList.add('active');
+            
+            // Update Topbar Title
+            document.getElementById('topbar-title').innerText = link.innerText + ' Configuration';
+        });
+    });
+</script>
+
+<!-- SUPABASE LOGIC -->
 <script type="module">
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 
@@ -299,14 +425,13 @@
         const { data: { user } } = await supabase.auth.getUser();
         if (user) {
             document.getElementById('login-section').style.display = 'none';
-            document.getElementById('dashboard-section').style.display = 'block';
+            document.getElementById('dashboard-section').style.display = 'flex'; // Changed to flex for sidebar layout
             loadAdminData();
         } else {
-            document.getElementById('login-section').style.display = 'block';
+            document.getElementById('login-section').style.display = 'flex';
             document.getElementById('dashboard-section').style.display = 'none';
         }
     }
-    
     checkUser();
 
     // Login logic
@@ -386,22 +511,15 @@
         });
     }
 
-    // Save Functions exposed globally
+    // Save Functions
     window.saveHero = async () => {
         const content = {
             subtitle: document.getElementById('hero-subtitle-input').value,
             title: document.getElementById('hero-title-input').value,
             btnText: document.getElementById('hero-btn-input').value
         };
-        
         const { error } = await supabase.from('portfolio_content').upsert({ section_name: 'hero_section', data: content });
-        
-        if (error) {
-            console.error("Supabase Error:", error);
-            alert("Failed to save! Check the console.");
-        } else {
-            showMsg('hero-msg');
-        }
+        if (error) { alert("Failed to save! Check the console."); } else { showMsg('hero-msg'); }
     };
 
     window.saveAbout = async () => {
