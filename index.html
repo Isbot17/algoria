@@ -6,7 +6,7 @@
     <title>Portfolio Template</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Mint Blue & White Theme Variables */
+        /* Mint Blue & White Theme Variables (Defaults) */
         :root {
             --bg-color: #f4fbf9; 
             --bg-alt: #ffffff;
@@ -290,7 +290,21 @@
                 const id = section.section_name;
                 const d = section.data;
 
-                if (id === 'hero_section') {
+                // --- THEME COLOR INJECTION ---
+                if (id === 'theme_section') {
+                    const root = document.documentElement;
+                    if (d.bgColor) root.style.setProperty('--bg-color', d.bgColor);
+                    if (d.bgAlt) root.style.setProperty('--bg-alt', d.bgAlt);
+                    if (d.cardBg) root.style.setProperty('--card-bg', d.cardBg);
+                    if (d.textPrimary) root.style.setProperty('--text-primary', d.textPrimary);
+                    if (d.textSecondary) root.style.setProperty('--text-secondary', d.textSecondary);
+                    if (d.accent) root.style.setProperty('--accent', d.accent);
+                    if (d.accentDark) root.style.setProperty('--accent-dark', d.accentDark);
+                    if (d.accentLight) root.style.setProperty('--accent-light', d.accentLight);
+                }
+                
+                // --- SECTION CONTENT INJECTION ---
+                else if (id === 'hero_section') {
                     if (d.subtitle) document.getElementById('hero-subtitle').innerText = d.subtitle;
                     if (d.title) document.getElementById('hero-title').innerText = d.title;
                     if (d.btnText) document.getElementById('hero-btn').innerText = d.btnText;
