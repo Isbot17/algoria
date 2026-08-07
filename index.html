@@ -227,7 +227,7 @@
     </header>
 
 <!-- HERO SECTION -->
-<section class="hero">
+<section class="hero" id="hero">
     <span class="mask-container"><h5 class="mask-text" id="hero-subtitle"><span class="flip-loader"></span></h5></span>
     <span class="mask-container delay-1"><h1 class="mask-text" id="hero-title"><span class="flip-loader"></span></h1></span> 
     <br>
@@ -266,7 +266,7 @@
 </section>
 
 <!-- VIDEO SECTION -->
-<section class="video-section slide-up">
+<section class="video-section slide-up" id="video">
     <a href="#" id="video-link" class="play-btn" target="_blank">▶</a>
     <span class="mask-container"><h3 class="mask-text" id="video-title"><span class="flip-loader"></span></h3></span>
 </section>
@@ -324,6 +324,32 @@
     
     const supabase = createClient(supabaseUrl, supabaseKey);
 
+    // Helper Function to swap classes per specific section
+    function applySectionAnimation(sectionId, animStyle) {
+        if (!animStyle || animStyle === 'slide') return;
+        const section = document.getElementById(sectionId);
+        if (!section) return;
+
+        // Targets elements inside the section, and the section itself if applicable
+        const targets = [section, ...section.querySelectorAll('.slide-up, .slide-down, .slide-left, .slide-right')];
+        
+        targets.forEach(el => {
+            if (el.classList.contains('slide-up') || el.classList.contains('slide-down') || 
+                el.classList.contains('slide-left') || el.classList.contains('slide-right')) {
+                
+                el.classList.remove('slide-up', 'slide-down', 'slide-left', 'slide-right');
+                
+                if (animStyle === 'fade') el.classList.add('fade-in');
+                if (animStyle === 'zoom') el.classList.add('zoom-in');
+                if (animStyle === 'flip-up') el.classList.add('flip-up-anim');
+                if (animStyle === 'flip-left') el.classList.add('flip-left-anim');
+                if (animStyle === 'bounce') el.classList.add('bounce-anim');
+                if (animStyle === 'blur') el.classList.add('blur-anim');
+                if (animStyle === 'rotate') el.classList.add('rotate-anim');
+            }
+        });
+    }
+
     async function loadAllContent() {
         try {
             const { data: sections, error } = await supabase.from('portfolio_content').select('*');
@@ -335,7 +361,7 @@
                 const id = section.section_name;
                 const d = section.data;
 
-                // --- THEME COLOR & ANIMATION INJECTION ---
+                // --- THEME COLOR INJECTION ---
                 if (id === 'theme_section') {
                     const root = document.documentElement;
                     if (d.bgColor) root.style.setProperty('--bg-color', d.bgColor);
@@ -346,29 +372,15 @@
                     if (d.accent) root.style.setProperty('--accent', d.accent);
                     if (d.accentDark) root.style.setProperty('--accent-dark', d.accentDark);
                     if (d.accentLight) root.style.setProperty('--accent-light', d.accentLight);
-
-                    // Handle dynamic animations (removes default sliding and applies selected animation)
-                    if (d.animationStyle && d.animationStyle !== 'slide') {
-                        const animElements = document.querySelectorAll('.slide-up, .slide-down, .slide-left, .slide-right');
-                        animElements.forEach(el => {
-                            el.classList.remove('slide-up', 'slide-down', 'slide-left', 'slide-right');
-                            
-                            if (d.animationStyle === 'fade') el.classList.add('fade-in');
-                            if (d.animationStyle === 'zoom') el.classList.add('zoom-in');
-                            if (d.animationStyle === 'flip-up') el.classList.add('flip-up-anim');
-                            if (d.animationStyle === 'flip-left') el.classList.add('flip-left-anim');
-                            if (d.animationStyle === 'bounce') el.classList.add('bounce-anim');
-                            if (d.animationStyle === 'blur') el.classList.add('blur-anim');
-                            if (d.animationStyle === 'rotate') el.classList.add('rotate-anim');
-                        });
-                    }
                 }
                 
-                // --- SECTION CONTENT INJECTION ---
+                // --- SECTION CONTENT & COMBO INJECTION ---
                 else if (id === 'hero_section') {
                     if (d.subtitle) document.getElementById('hero-subtitle').innerText = d.subtitle;
                     if (d.title) document.getElementById('hero-title').innerText = d.title;
                     if (d.btnText) document.getElementById('hero-btn').innerText = d.btnText;
+                    
+                    applySectionAnimation('hero', d.animationStyle);
                 }
                 else if (id === 'about_section') {
                     if (d.label) document.getElementById('about-label').innerText = d.label;
@@ -384,6 +396,8 @@
                             </div>
                         `).join('');
                     }
+                    
+                    applySectionAnimation('about', d.animationStyle);
                 }
                 else if (id === 'services_section') {
                     if (d.label) document.getElementById('services-label').innerText = d.label;
@@ -397,10 +411,14 @@
                             </div>
                         `).join('');
                     }
+                    
+                    applySectionAnimation('services', d.animationStyle);
                 }
                 else if (id === 'video_section') {
                     if (d.title) document.getElementById('video-title').innerText = d.title;
                     if (d.url) document.getElementById('video-link').href = d.url;
+                    
+                    applySectionAnimation('video', d.animationStyle);
                 }
                 else if (id === 'projects_section') {
                     if (d.label) document.getElementById('portfolio-label').innerText = d.label;
@@ -440,6 +458,8 @@
                     if (d.heading) document.getElementById('contact-heading').innerText = d.heading;
                     if (d.btnText) document.getElementById('contact-btn-text').innerText = d.btnText;
                     if (d.footer) document.getElementById('footer-text').innerText = d.footer;
+                    
+                    applySectionAnimation('contact', d.animationStyle);
                 }
             });
 
