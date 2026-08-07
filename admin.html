@@ -3,23 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Full Admin Dashboard | Algoria</title>
+    <title>Algoria CMS Dashboard</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --sidebar-bg: #0f172a;
-            --sidebar-hover: #1e293b;
-            --sidebar-text: #94a3b8;
+            /* Sleek Dark Sidebar Colors */
+            --sidebar-bg: #09090b;
+            --sidebar-hover: #27272a;
+            --sidebar-text: #a1a1aa;
             --sidebar-text-active: #ffffff;
-            --main-bg: #f1f5f9;
+            
+            /* Main Layout Colors */
+            --main-bg: #f8fafc;
             --panel-bg: #ffffff;
             --border-color: #e2e8f0;
+            --border-focus: #93c5fd;
+            
+            /* Text Colors */
             --text-main: #0f172a;
             --text-muted: #64748b;
+            
+            /* Brand Colors */
             --primary: #2563eb;
             --primary-hover: #1d4ed8;
             --success: #10b981;
             --danger: #ef4444;
+            --danger-hover: #dc2626;
         }
 
         body { 
@@ -31,6 +40,7 @@
             height: 100vh;
             overflow: hidden;
             display: flex;
+            -webkit-font-smoothing: antialiased;
         }
 
         /* --- LOGIN SCREEN --- */
@@ -40,17 +50,18 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: #e2e8f0;
+            background: #f1f5f9;
         }
         .login-card {
             background: white;
             padding: 2.5rem;
-            border-radius: 8px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
             width: 100%;
-            max-width: 380px;
+            max-width: 360px;
+            border: 1px solid var(--border-color);
         }
-        .login-card h2 { margin: 0 0 1.5rem 0; color: var(--text-main); text-align: center; }
+        .login-card h2 { margin: 0 0 1.5rem 0; color: var(--text-main); text-align: center; font-weight: 600; font-size: 1.5rem; }
 
         /* --- ADMIN DASHBOARD LAYOUT --- */
         #dashboard-section {
@@ -65,32 +76,34 @@
             background-color: var(--sidebar-bg);
             display: flex;
             flex-direction: column;
-            border-right: 1px solid #1e293b;
+            flex-shrink: 0;
         }
         .sidebar-header {
             padding: 1.5rem;
-            border-bottom: 1px solid var(--sidebar-hover);
+            display: flex;
+            align-items: center;
         }
         .sidebar-header h1 {
             color: white;
-            font-size: 1.25rem;
+            font-size: 1.1rem;
             margin: 0;
-            font-weight: 700;
+            font-weight: 600;
             letter-spacing: 0.5px;
         }
         .sidebar-nav {
-            padding: 1rem 0;
+            padding: 0 1rem;
             flex-grow: 1;
         }
         .nav-link {
             display: block;
-            padding: 0.875rem 1.5rem;
+            padding: 0.6rem 1rem;
+            margin-bottom: 0.25rem;
             color: var(--sidebar-text);
             text-decoration: none;
             font-weight: 500;
-            font-size: 0.95rem;
-            transition: all 0.2s;
-            border-left: 3px solid transparent;
+            font-size: 0.9rem;
+            border-radius: 6px;
+            transition: all 0.2s ease;
         }
         .nav-link:hover {
             background-color: var(--sidebar-hover);
@@ -99,11 +112,9 @@
         .nav-link.active {
             background-color: var(--sidebar-hover);
             color: var(--sidebar-text-active);
-            border-left-color: var(--primary);
         }
         .sidebar-footer {
             padding: 1.5rem;
-            border-top: 1px solid var(--sidebar-hover);
         }
 
         /* Main Content Area */
@@ -112,98 +123,132 @@
             display: flex;
             flex-direction: column;
             height: 100vh;
+            overflow: hidden;
         }
         .topbar {
             background: white;
-            height: 70px;
+            height: 64px;
             border-bottom: 1px solid var(--border-color);
             display: flex;
             align-items: center;
             padding: 0 2rem;
+            flex-shrink: 0;
         }
         .topbar h2 {
             margin: 0;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: 600;
+            color: var(--text-main);
         }
+        
+        /* Centered Scrollable Area */
         .content-scroll {
             padding: 2rem;
             overflow-y: auto;
             flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
         }
 
         /* View Panels (Tabs) */
-        .view-panel { display: none; }
-        .view-panel.active { display: block; animation: fadeIn 0.3s; }
+        .view-panel { display: none; width: 100%; max-width: 800px; }
+        .view-panel.active { display: block; animation: fadeIn 0.4s ease; }
         
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(5px); }
+            from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Form Styling */
+        /* Modern Admin Form Panels */
         .admin-panel {
             background: var(--panel-bg);
             border: 1px solid var(--border-color);
-            border-radius: 8px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-            max-width: 800px;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            margin-bottom: 2rem;
+            overflow: hidden;
         }
         .panel-header {
             padding: 1.25rem 1.5rem;
             border-bottom: 1px solid var(--border-color);
-            background: #f8fafc;
-            border-radius: 8px 8px 0 0;
+            background: #ffffff;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-        .panel-header h3 { margin: 0; font-size: 1rem; color: var(--text-main); }
-        .panel-body { padding: 1.5rem; }
+        .panel-header h3 { margin: 0; font-size: 1rem; color: var(--text-main); font-weight: 600; }
+        
+        .panel-body { 
+            padding: 1.5rem; 
+        }
+        .panel-section-title {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 700;
+            color: var(--text-muted);
+            margin: 1.5rem 0 1rem 0;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+        .panel-section-title:first-child { margin-top: 0; }
+
         .panel-footer {
-            padding: 1.25rem 1.5rem;
+            padding: 1rem 1.5rem;
             border-top: 1px solid var(--border-color);
             background: #f8fafc;
-            border-radius: 0 0 8px 8px;
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            justify-content: flex-end;
+            gap: 1rem;
         }
 
+        /* Form Inputs */
         .form-group { margin-bottom: 1.25rem; }
         label {
             display: block;
             font-size: 0.85rem;
-            font-weight: 600;
-            color: var(--text-muted);
-            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-main);
+            margin-bottom: 0.4rem;
         }
-        input, textarea, select {
+        input[type="text"], input[type="email"], input[type="password"], input[type="number"], textarea, select {
             width: 100%;
             padding: 0.6rem 0.75rem;
             border: 1px solid #cbd5e1;
-            border-radius: 4px;
+            border-radius: 6px;
             font-family: 'Inter', sans-serif;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             color: var(--text-main);
             box-sizing: border-box;
-            transition: border-color 0.2s, box-shadow 0.2s;
-        }
-        input[type="color"] {
-            padding: 0.25rem;
-            height: 42px;
-            cursor: pointer;
+            background-color: #ffffff;
+            transition: all 0.2s ease;
         }
         input:focus, textarea:focus, select:focus {
             outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+            border-color: var(--border-focus);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
         }
-        textarea { height: 100px; resize: vertical; }
+        textarea { height: 90px; resize: vertical; }
+
+        /* Custom Modern Color Picker */
+        input[type="color"] {
+            -webkit-appearance: none;
+            border: none;
+            width: 100%;
+            height: 38px;
+            border-radius: 6px;
+            cursor: pointer;
+            padding: 0;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+        input[type="color"]::-webkit-color-swatch { border: 1px solid var(--border-color); border-radius: 6px; }
 
         .form-row {
             display: flex;
-            gap: 1rem;
+            gap: 1.5rem;
             margin-bottom: 1.25rem;
         }
         .form-row .form-group { margin-bottom: 0; flex: 1; }
@@ -213,26 +258,35 @@
             background: var(--primary);
             color: white;
             border: none;
-            padding: 0.6rem 1.25rem;
-            border-radius: 4px;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
             font-weight: 500;
-            font-size: 0.9rem;
+            font-size: 0.875rem;
             cursor: pointer;
             transition: background 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
         .btn:hover { background: var(--primary-hover); }
-        .btn-danger { background: transparent; border: 1px solid var(--sidebar-text); color: var(--sidebar-text); width: 100%; }
-        .btn-danger:hover { background: rgba(255,255,255,0.05); color: white; border-color: white; }
+        .btn-danger { background: #18181b; border: 1px solid #3f3f46; color: white; width: 100%; }
+        .btn-danger:hover { background: var(--danger); border-color: var(--danger); }
         
         .status-msg {
             color: var(--success);
             font-weight: 500;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             display: none;
             margin: 0;
         }
         
-        .anim-select { width: 250px; font-weight: 600; color: var(--primary); border-color: var(--primary); }
+        .anim-select { 
+            width: auto; 
+            min-width: 180px; 
+            font-weight: 500; 
+            font-size: 0.85rem;
+            padding: 0.4rem 0.75rem; 
+        }
 
         /* --- LIVE PREVIEW ANIMATION CLASSES --- */
         @keyframes previewFade { from { opacity: 0; } to { opacity: 1; } }
@@ -269,12 +323,12 @@
                 <input type="password" id="admin-password">
             </div>
             <button class="btn" style="width: 100%; margin-top: 0.5rem;" id="login-btn">Sign In</button>
-            <p id="login-error" style="color:var(--danger); display:none; margin-top:1rem; text-align: center; font-size: 0.9rem;">Invalid credentials.</p>
+            <p id="login-error" style="color:var(--danger); display:none; margin-top:1rem; text-align: center; font-size: 0.85rem;">Invalid credentials.</p>
         </div>
     </div>
 
     <!-- ADMIN DASHBOARD -->
-    <div id="dashboard-section" style="display: none;">
+    <div id="dashboard-section">
         
         <!-- Sidebar Navigation -->
         <aside class="sidebar">
@@ -297,7 +351,7 @@
         <!-- Main Content -->
         <main class="main-content">
             <header class="topbar">
-                <h2 id="topbar-title">Theme Colors Configuration</h2>
+                <h2 id="topbar-title">Theme Colors</h2>
             </header>
             
             <div class="content-scroll">
@@ -307,13 +361,14 @@
                     <div class="admin-panel">
                         <div class="panel-header"><h3>Site Color Palette</h3></div>
                         <div class="panel-body">
+                            <div class="panel-section-title">Brand Accents</div>
                             <div class="form-row">
                                 <div class="form-group">
                                     <label>Main Accent (Brand Color)</label>
                                     <input type="color" id="color-accent" value="#7bd5c5">
                                 </div>
                                 <div class="form-group">
-                                    <label>Dark Accent (Buttons/Headers)</label>
+                                    <label>Dark Accent (Hover States)</label>
                                     <input type="color" id="color-accent-dark" value="#329684">
                                 </div>
                                 <div class="form-group">
@@ -322,6 +377,7 @@
                                 </div>
                             </div>
                             
+                            <div class="panel-section-title">Background Layout</div>
                             <div class="form-row">
                                 <div class="form-group">
                                     <label>Global Background</label>
@@ -337,6 +393,7 @@
                                 </div>
                             </div>
 
+                            <div class="panel-section-title">Typography</div>
                             <div class="form-row">
                                 <div class="form-group">
                                     <label>Primary Text Color</label>
@@ -348,10 +405,9 @@
                                 </div>
                             </div>
                         </div>
-
                         <div class="panel-footer">
-                            <p class="status-msg" id="theme-msg">✓ Saved successfully</p>
-                            <button class="btn" onclick="saveTheme()">Save Theme Settings</button>
+                            <span class="status-msg" id="theme-msg">✓ Saved successfully</span>
+                            <button class="btn" onclick="saveTheme()">Save Settings</button>
                         </div>
                     </div>
                 </div>
@@ -360,9 +416,9 @@
                 <div class="view-panel" id="view-hero">
                     <div class="admin-panel">
                         <div class="panel-header">
-                            <h3>Content Elements</h3>
+                            <h3>Hero Settings</h3>
                             <select id="hero-animation" class="anim-select">
-                                <option value="slide">Slide In (Default)</option><option value="fade">Fade In</option><option value="zoom">Zoom Reveal</option><option value="flip-up">3D Flip Up</option><option value="flip-left">3D Flip Left</option><option value="bounce">Bounce In (Spring)</option><option value="blur">Blur Reveal</option><option value="rotate">Rotate In</option>
+                                <option value="slide">Slide In (Default)</option><option value="fade">Fade In</option><option value="zoom">Zoom Reveal</option><option value="flip-up">3D Flip Up</option><option value="flip-left">3D Flip Left</option><option value="bounce">Bounce In</option><option value="blur">Blur Reveal</option><option value="rotate">Rotate In</option>
                             </select>
                         </div>
                         <div class="panel-body">
@@ -371,7 +427,7 @@
                             <div class="form-group"><label>Call to Action (Button Text)</label><input type="text" id="hero-btn-input"></div>
                         </div>
                         <div class="panel-footer">
-                            <p class="status-msg" id="hero-msg">✓ Saved successfully</p>
+                            <span class="status-msg" id="hero-msg">✓ Saved successfully</span>
                             <button class="btn" onclick="saveHero()">Save Changes</button>
                         </div>
                     </div>
@@ -381,32 +437,30 @@
                 <div class="view-panel" id="view-about">
                     <div class="admin-panel">
                         <div class="panel-header">
-                            <h3>General Details</h3>
+                            <h3>About Settings</h3>
                             <select id="about-animation" class="anim-select">
-                                <option value="slide">Slide In (Default)</option><option value="fade">Fade In</option><option value="zoom">Zoom Reveal</option><option value="flip-up">3D Flip Up</option><option value="flip-left">3D Flip Left</option><option value="bounce">Bounce In (Spring)</option><option value="blur">Blur Reveal</option><option value="rotate">Rotate In</option>
+                                <option value="slide">Slide In (Default)</option><option value="fade">Fade In</option><option value="zoom">Zoom Reveal</option><option value="flip-up">3D Flip Up</option><option value="flip-left">3D Flip Left</option><option value="bounce">Bounce In</option><option value="blur">Blur Reveal</option><option value="rotate">Rotate In</option>
                             </select>
                         </div>
                         <div class="panel-body">
+                            <div class="panel-section-title">General Content</div>
                             <div class="form-group"><label>Section Label</label><input type="text" id="about-label-input"></div>
                             <div class="form-group"><label>Heading</label><input type="text" id="about-heading-input"></div>
                             <div class="form-group"><label>Description</label><textarea id="about-desc-input"></textarea></div>
                             <div class="form-group"><label>Cover Image URL</label><input type="text" id="about-img-input" placeholder="https://..."></div>
-                        </div>
-                        
-                        <div class="panel-header" style="border-top: 1px solid var(--border-color); border-radius: 0;"><h3>Skills Tracker</h3></div>
-                        <div class="panel-body">
+                            
+                            <div class="panel-section-title">Skills Tracker</div>
                             <div class="form-row">
                                 <div class="form-group" style="flex: 2;"><label>Skill 1 Name</label><input type="text" id="s1-name"></div>
-                                <div class="form-group"><label>Percentage</label><input type="number" id="s1-pct"></div>
+                                <div class="form-group"><label>Percentage (0-100)</label><input type="number" id="s1-pct"></div>
                             </div>
                             <div class="form-row">
                                 <div class="form-group" style="flex: 2;"><label>Skill 2 Name</label><input type="text" id="s2-name"></div>
-                                <div class="form-group"><label>Percentage</label><input type="number" id="s2-pct"></div>
+                                <div class="form-group"><label>Percentage (0-100)</label><input type="number" id="s2-pct"></div>
                             </div>
                         </div>
-
                         <div class="panel-footer">
-                            <p class="status-msg" id="about-msg">✓ Saved successfully</p>
+                            <span class="status-msg" id="about-msg">✓ Saved successfully</span>
                             <button class="btn" onclick="saveAbout()">Save Changes</button>
                         </div>
                     </div>
@@ -416,18 +470,19 @@
                 <div class="view-panel" id="view-services">
                     <div class="admin-panel">
                         <div class="panel-header">
-                            <h3>Header Details</h3>
+                            <h3>Services Settings</h3>
                             <select id="services-animation" class="anim-select">
-                                <option value="slide">Slide In (Default)</option><option value="fade">Fade In</option><option value="zoom">Zoom Reveal</option><option value="flip-up">3D Flip Up</option><option value="flip-left">3D Flip Left</option><option value="bounce">Bounce In (Spring)</option><option value="blur">Blur Reveal</option><option value="rotate">Rotate In</option>
+                                <option value="slide">Slide In (Default)</option><option value="fade">Fade In</option><option value="zoom">Zoom Reveal</option><option value="flip-up">3D Flip Up</option><option value="flip-left">3D Flip Left</option><option value="bounce">Bounce In</option><option value="blur">Blur Reveal</option><option value="rotate">Rotate In</option>
                             </select>
                         </div>
                         <div class="panel-body">
-                            <div class="form-group"><label>Section Label</label><input type="text" id="services-label-input"></div>
-                            <div class="form-group"><label>Heading</label><input type="text" id="services-heading-input"></div>
-                        </div>
+                            <div class="panel-section-title">Header Block</div>
+                            <div class="form-row">
+                                <div class="form-group"><label>Section Label</label><input type="text" id="services-label-input"></div>
+                                <div class="form-group"><label>Heading</label><input type="text" id="services-heading-input"></div>
+                            </div>
 
-                        <div class="panel-header" style="border-top: 1px solid var(--border-color); border-radius: 0;"><h3>Service Cards</h3></div>
-                        <div class="panel-body">
+                            <div class="panel-section-title">Service Cards</div>
                             <div class="form-row">
                                 <div class="form-group" style="flex: 1;"><label>Service 1 Title</label><input type="text" id="srv1-title"></div>
                                 <div class="form-group" style="flex: 2;"><label>Description</label><input type="text" id="srv1-desc"></div>
@@ -441,9 +496,8 @@
                                 <div class="form-group" style="flex: 2;"><label>Description</label><input type="text" id="srv3-desc"></div>
                             </div>
                         </div>
-
                         <div class="panel-footer">
-                            <p class="status-msg" id="services-msg">✓ Saved successfully</p>
+                            <span class="status-msg" id="services-msg">✓ Saved successfully</span>
                             <button class="btn" onclick="saveServices()">Save Changes</button>
                         </div>
                     </div>
@@ -455,7 +509,7 @@
                         <div class="panel-header">
                             <h3>Media Settings</h3>
                             <select id="video-animation" class="anim-select">
-                                <option value="slide">Slide In (Default)</option><option value="fade">Fade In</option><option value="zoom">Zoom Reveal</option><option value="flip-up">3D Flip Up</option><option value="flip-left">3D Flip Left</option><option value="bounce">Bounce In (Spring)</option><option value="blur">Blur Reveal</option><option value="rotate">Rotate In</option>
+                                <option value="slide">Slide In (Default)</option><option value="fade">Fade In</option><option value="zoom">Zoom Reveal</option><option value="flip-up">3D Flip Up</option><option value="flip-left">3D Flip Left</option><option value="bounce">Bounce In</option><option value="blur">Blur Reveal</option><option value="rotate">Rotate In</option>
                             </select>
                         </div>
                         <div class="panel-body">
@@ -463,7 +517,7 @@
                             <div class="form-group"><label>Video Link URL (YouTube/Vimeo)</label><input type="text" id="video-url-input"></div>
                         </div>
                         <div class="panel-footer">
-                            <p class="status-msg" id="video-msg">✓ Saved successfully</p>
+                            <span class="status-msg" id="video-msg">✓ Saved successfully</span>
                             <button class="btn" onclick="saveVideo()">Save Changes</button>
                         </div>
                     </div>
@@ -473,24 +527,24 @@
                 <div class="view-panel" id="view-contact">
                     <div class="admin-panel">
                         <div class="panel-header">
-                            <h3>Contact Block</h3>
+                            <h3>Contact Settings</h3>
                             <select id="contact-animation" class="anim-select">
-                                <option value="slide">Slide In (Default)</option><option value="fade">Fade In</option><option value="zoom">Zoom Reveal</option><option value="flip-up">3D Flip Up</option><option value="flip-left">3D Flip Left</option><option value="bounce">Bounce In (Spring)</option><option value="blur">Blur Reveal</option><option value="rotate">Rotate In</option>
+                                <option value="slide">Slide In (Default)</option><option value="fade">Fade In</option><option value="zoom">Zoom Reveal</option><option value="flip-up">3D Flip Up</option><option value="flip-left">3D Flip Left</option><option value="bounce">Bounce In</option><option value="blur">Blur Reveal</option><option value="rotate">Rotate In</option>
                             </select>
                         </div>
                         <div class="panel-body">
-                            <div class="form-group"><label>Contact Label</label><input type="text" id="contact-label-input"></div>
-                            <div class="form-group"><label>Contact Heading</label><input type="text" id="contact-heading-input"></div>
-                            <div class="form-group"><label>Button Text</label><input type="text" id="contact-btn-input"></div>
-                        </div>
-                        
-                        <div class="panel-header" style="border-top: 1px solid var(--border-color); border-radius: 0;"><h3>Global Footer</h3></div>
-                        <div class="panel-body">
+                            <div class="panel-section-title">Contact Block</div>
+                            <div class="form-row">
+                                <div class="form-group"><label>Contact Label</label><input type="text" id="contact-label-input"></div>
+                                <div class="form-group"><label>Contact Heading</label><input type="text" id="contact-heading-input"></div>
+                                <div class="form-group"><label>Button Text</label><input type="text" id="contact-btn-input"></div>
+                            </div>
+                            
+                            <div class="panel-section-title">Global Footer</div>
                             <div class="form-group"><label>Copyright / Footer Text</label><input type="text" id="footer-text-input"></div>
                         </div>
-
                         <div class="panel-footer">
-                            <p class="status-msg" id="contact-msg">✓ Saved successfully</p>
+                            <span class="status-msg" id="contact-msg">✓ Saved successfully</span>
                             <button class="btn" onclick="saveContact()">Save Changes</button>
                         </div>
                     </div>
@@ -502,7 +556,7 @@
 
 <!-- UI INTERACTION SCRIPT (TABS & PREVIEW) -->
 <script>
-    // Tab switching logic
+    // Sidebar Tab Switching
     document.querySelectorAll('.nav-link').forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
@@ -511,26 +565,18 @@
             link.classList.add('active');
             const targetId = link.getAttribute('data-target');
             document.getElementById(targetId).classList.add('active');
-            document.getElementById('topbar-title').innerText = link.innerText + ' Configuration';
+            document.getElementById('topbar-title').innerText = link.innerText;
         });
     });
 
-    // Live Animation Preview logic
+    // Live Animation Preview
     document.querySelectorAll('.anim-select').forEach(select => {
         select.addEventListener('change', (e) => {
             const panel = e.target.closest('.admin-panel');
             const animType = e.target.value;
-            
-            // Clear out any old preview classes
             panel.classList.remove('preview-fade', 'preview-zoom', 'preview-flip-up', 'preview-flip-left', 'preview-bounce', 'preview-blur', 'preview-rotate', 'preview-slide');
-            
-            // Force the browser to register the class removal before adding the new one (reflow)
-            void panel.offsetWidth;
-            
-            // Trigger the new animation
-            if (animType) {
-                panel.classList.add(`preview-${animType}`);
-            }
+            void panel.offsetWidth; // Reflow to restart animation
+            if (animType) panel.classList.add(`preview-${animType}`);
         });
     });
 </script>
@@ -643,7 +689,7 @@
         });
     }
 
-    // Save Functions (Now Including Animation Styles per section)
+    // Save Functions 
     window.saveTheme = async () => {
         const content = {
             accent: document.getElementById('color-accent').value,
@@ -667,7 +713,7 @@
             animationStyle: document.getElementById('hero-animation').value
         };
         const { error } = await supabase.from('portfolio_content').upsert({ section_name: 'hero_section', data: content });
-        if (error) { alert("Failed to save! Check the console."); } else { showMsg('hero-msg'); }
+        if (error) { alert("Failed to save!"); } else { showMsg('hero-msg'); }
     };
 
     window.saveAbout = async () => {
@@ -683,7 +729,7 @@
             ]
         };
         const { error } = await supabase.from('portfolio_content').upsert({ section_name: 'about_section', data: content });
-        if (error) { alert("Failed to save! Check the console."); } else { showMsg('about-msg'); }
+        if (error) { alert("Failed to save!"); } else { showMsg('about-msg'); }
     };
 
     window.saveServices = async () => {
@@ -698,7 +744,7 @@
             ]
         };
         const { error } = await supabase.from('portfolio_content').upsert({ section_name: 'services_section', data: content });
-        if (error) { alert("Failed to save! Check the console."); } else { showMsg('services-msg'); }
+        if (error) { alert("Failed to save!"); } else { showMsg('services-msg'); }
     };
 
     window.saveVideo = async () => {
@@ -708,7 +754,7 @@
             animationStyle: document.getElementById('video-animation').value
         };
         const { error } = await supabase.from('portfolio_content').upsert({ section_name: 'video_section', data: content });
-        if (error) { alert("Failed to save! Check the console."); } else { showMsg('video-msg'); }
+        if (error) { alert("Failed to save!"); } else { showMsg('video-msg'); }
     };
 
     window.saveContact = async () => {
@@ -720,7 +766,7 @@
             animationStyle: document.getElementById('contact-animation').value
         };
         const { error } = await supabase.from('portfolio_content').upsert({ section_name: 'contact_section', data: content });
-        if (error) { alert("Failed to save! Check the console."); } else { showMsg('contact-msg'); }
+        if (error) { alert("Failed to save!"); } else { showMsg('contact-msg'); }
     };
 
     function showMsg(id) {
