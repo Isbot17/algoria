@@ -154,6 +154,9 @@
             border-bottom: 1px solid var(--border-color);
             background: #f8fafc;
             border-radius: 8px 8px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         .panel-header h3 { margin: 0; font-size: 1rem; color: var(--text-main); }
         .panel-body { padding: 1.5rem; }
@@ -228,6 +231,8 @@
             display: none;
             margin: 0;
         }
+        
+        .anim-select { width: 250px; font-weight: 600; color: var(--primary); border-color: var(--primary); }
     </style>
 </head>
 <body>
@@ -258,7 +263,7 @@
                 <h1>Algoria CMS</h1>
             </div>
             <nav class="sidebar-nav">
-                <a href="#" class="nav-link active" data-target="view-theme">Theme & UI</a>
+                <a href="#" class="nav-link active" data-target="view-theme">Theme Colors</a>
                 <a href="#" class="nav-link" data-target="view-hero">Hero Section</a>
                 <a href="#" class="nav-link" data-target="view-about">About Section</a>
                 <a href="#" class="nav-link" data-target="view-services">Services</a>
@@ -273,7 +278,7 @@
         <!-- Main Content -->
         <main class="main-content">
             <header class="topbar">
-                <h2 id="topbar-title">Theme & UI Configuration</h2>
+                <h2 id="topbar-title">Theme Colors Configuration</h2>
             </header>
             
             <div class="content-scroll">
@@ -325,23 +330,6 @@
                             </div>
                         </div>
 
-                        <div class="panel-header" style="border-top: 1px solid var(--border-color); border-radius: 0;"><h3>Animation Packages</h3></div>
-                        <div class="panel-body">
-                            <div class="form-group">
-                                <label>Global Scroll Reveal Animation</label>
-                                <select id="theme-animation">
-                                    <option value="slide">Slide (Default)</option>
-                                    <option value="fade">Fade In</option>
-                                    <option value="zoom">Zoom Reveal</option>
-                                    <option value="flip-up">3D Flip Up</option>
-                                    <option value="flip-left">3D Flip Left</option>
-                                    <option value="bounce">Bounce In (Spring)</option>
-                                    <option value="blur">Blur Reveal</option>
-                                    <option value="rotate">Rotate In</option>
-                                </select>
-                            </div>
-                        </div>
-
                         <div class="panel-footer">
                             <p class="status-msg" id="theme-msg">✓ Saved successfully</p>
                             <button class="btn" onclick="saveTheme()">Save Theme Settings</button>
@@ -352,7 +340,12 @@
                 <!-- HERO VIEW -->
                 <div class="view-panel" id="view-hero">
                     <div class="admin-panel">
-                        <div class="panel-header"><h3>Content Elements</h3></div>
+                        <div class="panel-header">
+                            <h3>Content Elements</h3>
+                            <select id="hero-animation" class="anim-select">
+                                <option value="slide">Slide In (Default)</option><option value="fade">Fade In</option><option value="zoom">Zoom Reveal</option><option value="flip-up">3D Flip Up</option><option value="flip-left">3D Flip Left</option><option value="bounce">Bounce In (Spring)</option><option value="blur">Blur Reveal</option><option value="rotate">Rotate In</option>
+                            </select>
+                        </div>
                         <div class="panel-body">
                             <div class="form-group"><label>Subtitle</label><input type="text" id="hero-subtitle-input"></div>
                             <div class="form-group"><label>Main Title</label><input type="text" id="hero-title-input"></div>
@@ -368,7 +361,12 @@
                 <!-- ABOUT VIEW -->
                 <div class="view-panel" id="view-about">
                     <div class="admin-panel">
-                        <div class="panel-header"><h3>General Details</h3></div>
+                        <div class="panel-header">
+                            <h3>General Details</h3>
+                            <select id="about-animation" class="anim-select">
+                                <option value="slide">Slide In (Default)</option><option value="fade">Fade In</option><option value="zoom">Zoom Reveal</option><option value="flip-up">3D Flip Up</option><option value="flip-left">3D Flip Left</option><option value="bounce">Bounce In (Spring)</option><option value="blur">Blur Reveal</option><option value="rotate">Rotate In</option>
+                            </select>
+                        </div>
                         <div class="panel-body">
                             <div class="form-group"><label>Section Label</label><input type="text" id="about-label-input"></div>
                             <div class="form-group"><label>Heading</label><input type="text" id="about-heading-input"></div>
@@ -398,7 +396,12 @@
                 <!-- SERVICES VIEW -->
                 <div class="view-panel" id="view-services">
                     <div class="admin-panel">
-                        <div class="panel-header"><h3>Header Details</h3></div>
+                        <div class="panel-header">
+                            <h3>Header Details</h3>
+                            <select id="services-animation" class="anim-select">
+                                <option value="slide">Slide In (Default)</option><option value="fade">Fade In</option><option value="zoom">Zoom Reveal</option><option value="flip-up">3D Flip Up</option><option value="flip-left">3D Flip Left</option><option value="bounce">Bounce In (Spring)</option><option value="blur">Blur Reveal</option><option value="rotate">Rotate In</option>
+                            </select>
+                        </div>
                         <div class="panel-body">
                             <div class="form-group"><label>Section Label</label><input type="text" id="services-label-input"></div>
                             <div class="form-group"><label>Heading</label><input type="text" id="services-heading-input"></div>
@@ -430,7 +433,12 @@
                 <!-- VIDEO VIEW -->
                 <div class="view-panel" id="view-video">
                     <div class="admin-panel">
-                        <div class="panel-header"><h3>Media Settings</h3></div>
+                        <div class="panel-header">
+                            <h3>Media Settings</h3>
+                            <select id="video-animation" class="anim-select">
+                                <option value="slide">Slide In (Default)</option><option value="fade">Fade In</option><option value="zoom">Zoom Reveal</option><option value="flip-up">3D Flip Up</option><option value="flip-left">3D Flip Left</option><option value="bounce">Bounce In (Spring)</option><option value="blur">Blur Reveal</option><option value="rotate">Rotate In</option>
+                            </select>
+                        </div>
                         <div class="panel-body">
                             <div class="form-group"><label>Banner Title</label><input type="text" id="video-title-input"></div>
                             <div class="form-group"><label>Video Link URL (YouTube/Vimeo)</label><input type="text" id="video-url-input"></div>
@@ -445,7 +453,12 @@
                 <!-- CONTACT & FOOTER VIEW -->
                 <div class="view-panel" id="view-contact">
                     <div class="admin-panel">
-                        <div class="panel-header"><h3>Contact Block</h3></div>
+                        <div class="panel-header">
+                            <h3>Contact Block</h3>
+                            <select id="contact-animation" class="anim-select">
+                                <option value="slide">Slide In (Default)</option><option value="fade">Fade In</option><option value="zoom">Zoom Reveal</option><option value="flip-up">3D Flip Up</option><option value="flip-left">3D Flip Left</option><option value="bounce">Bounce In (Spring)</option><option value="blur">Blur Reveal</option><option value="rotate">Rotate In</option>
+                            </select>
+                        </div>
                         <div class="panel-body">
                             <div class="form-group"><label>Contact Label</label><input type="text" id="contact-label-input"></div>
                             <div class="form-group"><label>Contact Heading</label><input type="text" id="contact-heading-input"></div>
@@ -492,7 +505,6 @@
     
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    // Auth state control
     async function checkUser() {
         const { data: { user } } = await supabase.auth.getUser();
         if (user) {
@@ -506,21 +518,14 @@
     }
     checkUser();
 
-    // Login logic
     document.getElementById('login-btn').addEventListener('click', async () => {
         const email = document.getElementById('admin-email').value;
         const password = document.getElementById('admin-password').value;
-        
         const { error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) {
-            document.getElementById('login-error').style.display = 'block';
-        } else {
-            document.getElementById('login-error').style.display = 'none';
-            checkUser();
-        }
+        if (error) { document.getElementById('login-error').style.display = 'block'; } 
+        else { document.getElementById('login-error').style.display = 'none'; checkUser(); }
     });
 
-    // Logout logic
     document.getElementById('logout-btn').addEventListener('click', async () => {
         await supabase.auth.signOut();
         checkUser();
@@ -534,7 +539,6 @@
         data.forEach(section => {
             const d = section.data;
             
-            // LOAD THEME DATA
             if (section.section_name === 'theme_section') {
                 if (d.accent) document.getElementById('color-accent').value = d.accent;
                 if (d.accentDark) document.getElementById('color-accent-dark').value = d.accentDark;
@@ -544,20 +548,19 @@
                 if (d.cardBg) document.getElementById('color-card-bg').value = d.cardBg;
                 if (d.textPrimary) document.getElementById('color-text-primary').value = d.textPrimary;
                 if (d.textSecondary) document.getElementById('color-text-secondary').value = d.textSecondary;
-                
-                if (d.animationStyle) document.getElementById('theme-animation').value = d.animationStyle;
             }
-            
             if (section.section_name === 'hero_section') {
                 document.getElementById('hero-subtitle-input').value = d.subtitle || "";
                 document.getElementById('hero-title-input').value = d.title || "";
                 document.getElementById('hero-btn-input').value = d.btnText || "";
+                if (d.animationStyle) document.getElementById('hero-animation').value = d.animationStyle;
             }
             if (section.section_name === 'about_section') {
                 document.getElementById('about-label-input').value = d.label || "";
                 document.getElementById('about-heading-input').value = d.heading || "";
                 document.getElementById('about-desc-input').value = d.desc || "";
                 document.getElementById('about-img-input').value = d.imageUrl || "";
+                if (d.animationStyle) document.getElementById('about-animation').value = d.animationStyle;
                 
                 if (d.skills && d.skills[0]) {
                     document.getElementById('s1-name').value = d.skills[0].name || "";
@@ -571,6 +574,7 @@
             if (section.section_name === 'services_section') {
                 document.getElementById('services-label-input').value = d.label || "";
                 document.getElementById('services-heading-input').value = d.heading || "";
+                if (d.animationStyle) document.getElementById('services-animation').value = d.animationStyle;
                 
                 if (d.items && d.items[0]) {
                     document.getElementById('srv1-title').value = d.items[0].title || "";
@@ -588,17 +592,19 @@
             if (section.section_name === 'video_section') {
                 document.getElementById('video-title-input').value = d.title || "";
                 document.getElementById('video-url-input').value = d.url || "";
+                if (d.animationStyle) document.getElementById('video-animation').value = d.animationStyle;
             }
             if (section.section_name === 'contact_section') {
                 document.getElementById('contact-label-input').value = d.label || "";
                 document.getElementById('contact-heading-input').value = d.heading || "";
                 document.getElementById('contact-btn-input').value = d.btnText || "";
                 document.getElementById('footer-text-input').value = d.footer || "";
+                if (d.animationStyle) document.getElementById('contact-animation').value = d.animationStyle;
             }
         });
     }
 
-    // Save Functions
+    // Save Functions (Now Including Animation Styles per section)
     window.saveTheme = async () => {
         const content = {
             accent: document.getElementById('color-accent').value,
@@ -608,8 +614,7 @@
             bgAlt: document.getElementById('color-bg-alt').value,
             cardBg: document.getElementById('color-card-bg').value,
             textPrimary: document.getElementById('color-text-primary').value,
-            textSecondary: document.getElementById('color-text-secondary').value,
-            animationStyle: document.getElementById('theme-animation').value
+            textSecondary: document.getElementById('color-text-secondary').value
         };
         const { error } = await supabase.from('portfolio_content').upsert({ section_name: 'theme_section', data: content });
         if (error) { alert("Failed to save theme! Check the console."); } else { showMsg('theme-msg'); }
@@ -619,7 +624,8 @@
         const content = {
             subtitle: document.getElementById('hero-subtitle-input').value,
             title: document.getElementById('hero-title-input').value,
-            btnText: document.getElementById('hero-btn-input').value
+            btnText: document.getElementById('hero-btn-input').value,
+            animationStyle: document.getElementById('hero-animation').value
         };
         const { error } = await supabase.from('portfolio_content').upsert({ section_name: 'hero_section', data: content });
         if (error) { alert("Failed to save! Check the console."); } else { showMsg('hero-msg'); }
@@ -631,6 +637,7 @@
             heading: document.getElementById('about-heading-input').value,
             desc: document.getElementById('about-desc-input').value,
             imageUrl: document.getElementById('about-img-input').value,
+            animationStyle: document.getElementById('about-animation').value,
             skills: [
                 { name: document.getElementById('s1-name').value, percent: document.getElementById('s1-pct').value },
                 { name: document.getElementById('s2-name').value, percent: document.getElementById('s2-pct').value }
@@ -644,6 +651,7 @@
         const content = {
             label: document.getElementById('services-label-input').value,
             heading: document.getElementById('services-heading-input').value,
+            animationStyle: document.getElementById('services-animation').value,
             items: [
                 { icon: "01", title: document.getElementById('srv1-title').value, desc: document.getElementById('srv1-desc').value },
                 { icon: "02", title: document.getElementById('srv2-title').value, desc: document.getElementById('srv2-desc').value },
@@ -657,7 +665,8 @@
     window.saveVideo = async () => {
         const content = {
             title: document.getElementById('video-title-input').value,
-            url: document.getElementById('video-url-input').value
+            url: document.getElementById('video-url-input').value,
+            animationStyle: document.getElementById('video-animation').value
         };
         const { error } = await supabase.from('portfolio_content').upsert({ section_name: 'video_section', data: content });
         if (error) { alert("Failed to save! Check the console."); } else { showMsg('video-msg'); }
@@ -668,7 +677,8 @@
             label: document.getElementById('contact-label-input').value,
             heading: document.getElementById('contact-heading-input').value,
             btnText: document.getElementById('contact-btn-input').value,
-            footer: document.getElementById('footer-text-input').value
+            footer: document.getElementById('footer-text-input').value,
+            animationStyle: document.getElementById('contact-animation').value
         };
         const { error } = await supabase.from('portfolio_content').upsert({ section_name: 'contact_section', data: content });
         if (error) { alert("Failed to save! Check the console."); } else { showMsg('contact-msg'); }
