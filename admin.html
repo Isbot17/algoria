@@ -175,7 +175,7 @@
             color: var(--text-muted);
             margin-bottom: 0.5rem;
         }
-        input, textarea {
+        input, textarea, select {
             width: 100%;
             padding: 0.6rem 0.75rem;
             border: 1px solid #cbd5e1;
@@ -191,7 +191,7 @@
             height: 42px;
             cursor: pointer;
         }
-        input:focus, textarea:focus {
+        input:focus, textarea:focus, select:focus {
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
@@ -258,7 +258,7 @@
                 <h1>Algoria CMS</h1>
             </div>
             <nav class="sidebar-nav">
-                <a href="#" class="nav-link active" data-target="view-theme">Theme Colors</a>
+                <a href="#" class="nav-link active" data-target="view-theme">Theme & UI</a>
                 <a href="#" class="nav-link" data-target="view-hero">Hero Section</a>
                 <a href="#" class="nav-link" data-target="view-about">About Section</a>
                 <a href="#" class="nav-link" data-target="view-services">Services</a>
@@ -273,7 +273,7 @@
         <!-- Main Content -->
         <main class="main-content">
             <header class="topbar">
-                <h2 id="topbar-title">Theme Colors Configuration</h2>
+                <h2 id="topbar-title">Theme & UI Configuration</h2>
             </header>
             
             <div class="content-scroll">
@@ -289,11 +289,11 @@
                                     <input type="color" id="color-accent" value="#7bd5c5">
                                 </div>
                                 <div class="form-group">
-                                    <label>Dark Accent (Buttons Hover/Headers)</label>
+                                    <label>Dark Accent (Buttons/Headers)</label>
                                     <input type="color" id="color-accent-dark" value="#329684">
                                 </div>
                                 <div class="form-group">
-                                    <label>Light Accent (Highlights/Bars)</label>
+                                    <label>Light Accent (Highlights)</label>
                                     <input type="color" id="color-accent-light" value="#e6f7f4">
                                 </div>
                             </div>
@@ -304,7 +304,7 @@
                                     <input type="color" id="color-bg" value="#f4fbf9">
                                 </div>
                                 <div class="form-group">
-                                    <label>Alternate Background (Sections)</label>
+                                    <label>Alternate Background</label>
                                     <input type="color" id="color-bg-alt" value="#ffffff">
                                 </div>
                                 <div class="form-group">
@@ -324,9 +324,27 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="panel-header" style="border-top: 1px solid var(--border-color); border-radius: 0;"><h3>Animation Packages</h3></div>
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <label>Global Scroll Reveal Animation</label>
+                                <select id="theme-animation">
+                                    <option value="slide">Slide (Default)</option>
+                                    <option value="fade">Fade In</option>
+                                    <option value="zoom">Zoom Reveal</option>
+                                    <option value="flip-up">3D Flip Up</option>
+                                    <option value="flip-left">3D Flip Left</option>
+                                    <option value="bounce">Bounce In (Spring)</option>
+                                    <option value="blur">Blur Reveal</option>
+                                    <option value="rotate">Rotate In</option>
+                                </select>
+                            </div>
+                        </div>
+
                         <div class="panel-footer">
                             <p class="status-msg" id="theme-msg">✓ Saved successfully</p>
-                            <button class="btn" onclick="saveTheme()">Save Theme Colors</button>
+                            <button class="btn" onclick="saveTheme()">Save Theme Settings</button>
                         </div>
                     </div>
                 </div>
@@ -455,16 +473,11 @@
     document.querySelectorAll('.nav-link').forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
-            // Remove active state from all links and panels
             document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
             document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
-            
-            // Add active state to clicked link and corresponding panel
             link.classList.add('active');
             const targetId = link.getAttribute('data-target');
             document.getElementById(targetId).classList.add('active');
-            
-            // Update Topbar Title
             document.getElementById('topbar-title').innerText = link.innerText + ' Configuration';
         });
     });
@@ -531,6 +544,8 @@
                 if (d.cardBg) document.getElementById('color-card-bg').value = d.cardBg;
                 if (d.textPrimary) document.getElementById('color-text-primary').value = d.textPrimary;
                 if (d.textSecondary) document.getElementById('color-text-secondary').value = d.textSecondary;
+                
+                if (d.animationStyle) document.getElementById('theme-animation').value = d.animationStyle;
             }
             
             if (section.section_name === 'hero_section') {
@@ -593,7 +608,8 @@
             bgAlt: document.getElementById('color-bg-alt').value,
             cardBg: document.getElementById('color-card-bg').value,
             textPrimary: document.getElementById('color-text-primary').value,
-            textSecondary: document.getElementById('color-text-secondary').value
+            textSecondary: document.getElementById('color-text-secondary').value,
+            animationStyle: document.getElementById('theme-animation').value
         };
         const { error } = await supabase.from('portfolio_content').upsert({ section_name: 'theme_section', data: content });
         if (error) { alert("Failed to save theme! Check the console."); } else { showMsg('theme-msg'); }
